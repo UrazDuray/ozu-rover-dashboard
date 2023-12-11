@@ -6,7 +6,7 @@
 
 <template>
     <div :class="'MainClass'">
-gamera
+Greetings
     </div>
 </template>
 
