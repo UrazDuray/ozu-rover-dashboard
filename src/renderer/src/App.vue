@@ -5,6 +5,7 @@ import ConsoleWindow from './components/ConsoleWindow.vue';
 import CamerasWindow from './components/CamerasWindow.vue';
 import ScienceWindow from './components/ScienceWindow.vue';
 import GraphsWindow from './components/GraphsWindow.vue';
+import GPSWindow from './components/GPSWindow.vue';
 
 </script>
 
@@ -108,6 +109,7 @@ export default {
     <CamerasWindow v-else-if="activeWindow == 'cameras'"/>
     <ScienceWindow :roverData="roverData" v-else-if="activeWindow == 'science'"/>
     <GraphsWindow :size-updater="sizeUpdater" :roverData="roverData" v-else-if="activeWindow == 'graphs'"/>
+    <GPSWindow v-else-if="activeWindow=='GPS'"/>
   </div>
 </template>
 

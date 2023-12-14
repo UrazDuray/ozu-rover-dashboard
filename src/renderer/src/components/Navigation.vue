@@ -5,30 +5,37 @@ export default {
   },
   computed: {
     windows() {
-      return ['home', 'console', 'science', 'cameras', 'graphs']
+      return ['home', 'console', 'science', 'cameras', 'graphs','GPS']
+      // The names of the pages are written
     } 
   },
   data() {
     return {
-      selectedWindow: 'graphs',
+      selectedWindow: 'GPS',
+      // It is stated which page will be opened first.
       selectIndicatorData: {left: 0, top: 0, height: 0, width: 0},
     }
   },
   methods: {
     ChangeWindow(windowName){
       this.$emit('WindowChange', windowName)
+      //It calls the 'windows change' method and gives the currently selected page as a parameter
+     
       this.selectedWindow = windowName
-
+      // Makes the selected page equal to the value received as a parameter
+      
       const el = this.$refs[`ref_${windowName}`][0]
       const elData = {left: el.offsetLeft, top: el.offsetTop, height: el.offsetHeight, width: el.offsetWidth - 2}
       this.selectIndicatorData = elData
     },
     FirstLetterUpperCase(string){
+      // Converts the first letter of the word to uppercase.
       return string[0].toUpperCase() + string.slice(1)
     }
   },
   mounted() {
     this.ChangeWindow(this.selectedWindow)
+    // It takes the selected page as a parameter and replaces the current page.
   },
   watch:{
     sizeUpdater(){
@@ -51,7 +58,9 @@ export default {
     </div>
 
     <div v-for="(window, index) in windows" class="navigationButtonClass" :ref="`ref_${window}`" @click="ChangeWindow(window)" :key="index">
+      <!-- Displaying pages with a for loop -->
       <span class="navigationSpan" :style="{color: selectedWindow == window ? 'var(--primary)' : 'var(--font-color-light)'}">{{ FirstLetterUpperCase(window) }}</span>
+      <!-- It adjusts the color according to the selected page. -->
     </div>
   </div>
 </template>

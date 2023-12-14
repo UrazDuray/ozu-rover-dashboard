@@ -5,6 +5,7 @@ import NoConnectionIcon from '../../../../resources/icons/NoConnectionIcon.png'
 import ConnectionIcon from '../../../../resources/icons/ConnectionIcon.png'
 import BatteryIcon from '../../../../resources/icons/BatteryIcon.svg'
 import ChartPlotter from './ChartPlotter.vue'
+// Pages are imported here
 </script>
 
 <script>
