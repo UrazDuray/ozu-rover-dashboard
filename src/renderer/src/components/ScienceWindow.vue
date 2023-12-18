@@ -12,7 +12,7 @@ export default {
 </script>
 
 <template>
-  <div :class="'MainClass'">
+  <div :class="'MainClass'" v-if = "roverData != undefined ? roverData : 0">
     <div class="DirtValuesDiv">
       <span class="DirtDirtTemperature">{{ roverData.DirtTemperature }} &degC</span>
       <span class="DirtHumidity">{{ roverData.DirtHumidity }} g/m<sup>3</sup></span>

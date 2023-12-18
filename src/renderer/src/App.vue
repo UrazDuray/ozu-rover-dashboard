@@ -6,7 +6,7 @@ import CamerasWindow from './components/CamerasWindow.vue';
 import ScienceWindow from './components/ScienceWindow.vue';
 import GraphsWindow from './components/GraphsWindow.vue';
 import GPSWindow from './components/GPSWindow.vue';
-
+// Pages are imported here
 </script>
 
 <script>
@@ -31,7 +31,7 @@ export default {
   },
   methods: {
     HandleRoverData(roverData){
-      // console.log(roverData)
+      // 
       if(roverData.timestamp > this.prevRoverTime){
         this.roverData = roverData
         this.prevRoverTime = roverData.timestamp
@@ -40,7 +40,7 @@ export default {
         roverData.old = true
         this.roverData = roverData
       }
-      
+
       this.roverDataHistory.push(this.roverData)
       
       //prevent memory leak

@@ -36,14 +36,14 @@ export default {
           return {bottom: 0, right: this.LocoMotorDataMargin + 'px'}
         default:
           break;
-      }
+        }
+      },
     }
-  },
 }
 </script>
 
 <template>
-  <div :class="['WindowClass', 'HomeWindowDiv']">
+  <div :class="['WindowClass', 'HomeWindowDiv']" v-if="roverData != undefined ? roverData:0">
     <div class="topInfo">
       <Switch
         class="switchClass"
