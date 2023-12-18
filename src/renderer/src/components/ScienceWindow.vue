@@ -13,35 +13,10 @@ export default {
 
 <template>
   <div :class="'MainClass'" v-if = "roverData != undefined ? roverData : 0">
-    <div class="DirtValuesDiv">
-      <span class="DirtDirtTemperature">{{ roverData.DirtTemperature }} &degC</span>
-      <span class="DirtHumidity">{{ roverData.DirtHumidity }} g/m<sup>3</sup></span>
-      <img :src="DeepDirtIcon" alt="">
-    </div>
     
   </div>
 </template>
 
 <style scoped>
-.DirtValuesDiv{
-  position: relative;
-  /* border: 2px solid red; */
-  height: 200px;
-  aspect-ratio: 1;
-}
-.DirtValuesDiv img{
-  height: 100%;
-}
-.DirtDirtTemperature{
-  position: absolute;
-  font-size: 1.5rem;
-  bottom: 10px;
-  left: 10px;
-}
-.DirtHumidity{
-  position: absolute;
-  font-size: 1.5rem;
-  bottom: 10px;
-  right: 10px;
-}
+
 </style>
