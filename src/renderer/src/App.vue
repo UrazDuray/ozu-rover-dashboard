@@ -119,7 +119,7 @@ export default {
   --theme-color-2: rgb(37, 37, 37);
   --font-color-light: rgb(236, 236, 236);
   
-  --primary: rgb(114, 193, 219);
+  --primary: rgb(9, 97, 43);
   --green: rgb(33, 224, 65);
   --red: rgb(224, 33, 33);
   --yellow: rgb(224, 214, 33);
