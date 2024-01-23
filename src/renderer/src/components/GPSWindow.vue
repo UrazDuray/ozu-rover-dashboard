@@ -1,5 +1,5 @@
 <script>
-import MarkerSidebar from './MarkerSidebar.vue';
+import MarkerSidebar from './autonomy/MarkerSidebar.vue';
 import mapboxgl from 'mapbox-gl';
 //import audio1 from '../assets/sounds/sound.mp3';
 
