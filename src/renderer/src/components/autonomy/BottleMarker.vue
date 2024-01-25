@@ -1,5 +1,10 @@
 <script>
 export default {
+    data() {
+        return {
+            type: "Bottle"
+        }
+    },
     
 }
 </script>
