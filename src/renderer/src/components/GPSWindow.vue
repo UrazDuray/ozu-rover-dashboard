@@ -104,12 +104,12 @@ export default {
     <div class="left"></div>
     <div class="center"></div>
     <div class="right">
-    <MarkerSidebar></MarkerSidebar>
+      <MarkerSidebar></MarkerSidebar>
     </div>
   </div>
   <div id="map" ref="map"></div>
   <!-- The Div label, which is the CSS-CCS class, serves to give the appearance of a coordinate system on the map.  -->
-  <div class="grid-container">
+  <div class="gridContainer">
     <div class="css-ccs">
       <div class="dot" style="--x: -3;"></div>
       <div class="dot" style="--x: 0;"></div>
@@ -119,6 +119,10 @@ export default {
   </div>
 </template>
 <style scoped>
+
+#body {
+  overflow: hidden;
+}
 
 #map {
   width: 100vw;
@@ -138,6 +142,8 @@ export default {
   left: 0;
   color: white;
   z-index: 100;
+  pointer-events: none;
+  overflow: hidden;
 }
 
 .center {
@@ -152,12 +158,13 @@ export default {
   border-radius: 10px;
   background-color: rgba(50, 117, 53, 0.349);
 }
-.grid-container {
+.gridContainer {
   padding: none;
   margin: none;
   position: absolute;
   width: 100vw;
   height: 100vh;
+  pointer-events: none;
 }
 .css-ccs {
   --c: 10;
