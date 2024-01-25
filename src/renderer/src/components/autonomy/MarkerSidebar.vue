@@ -56,7 +56,7 @@ export default {
 </script>
 
 <template id="bodyMarkerSideBar">
-    <div>
+    <div class="containerMarkerSidebar">
         <header class="header">
             <ul>
                 <li v-for="task in markers">
@@ -117,6 +117,9 @@ export default {
 <style scoped>
 /* #bodyMarkerSideBar {} */
 
+.containerMarkerSidebar {
+    pointer-events: all;
+}
 
 .header {
     height: 35vh;
