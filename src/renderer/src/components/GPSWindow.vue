@@ -12,6 +12,7 @@ export default {
     return {
       map: null,
       mapboxAccessToken: "pk.eyJ1IjoiZW1yZWhhbmNldGluIiwiYSI6ImNscW5tcXZrODMwOTQycXJxZWVyYzYwNmoifQ.d_BUVkl22ZIhhK1_Qrt34g",
+      allMarkers: []
     };
   },
   mounted() {
@@ -46,43 +47,12 @@ export default {
       this.map.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.5 });
 
     });
-
-    const geojson = {
-      type: 'FeatureCollection',
-      features: [
-        {
-          type: 'Feature',
-          geometry: {
-            type: 'Point',
-            coordinates: [-110.7936091, 38.4063641]
-          },
-          properties: {
-            title: 'Mapbox',
-            description: 'Washington, D.C.'
-          }
-        },
-        {
-          type: 'Feature',
-          geometry: {
-            type: 'Point',
-            coordinates: [-110.7916091, 38.4063641]
-          },
-          properties: {
-            title: 'Mapbox',
-            description: 'San Francisco, California'
-          }
-        }
-      ]
-    };
-
-    for (const feature of geojson.features) {
-       //create a HTML element for each feature
-      const temp = document.createElement('div');
-      temp.className = 'marker';
-
-       //make a marker for each feature and add to the map
-      new mapboxgl.Marker(this.temp).setLngLat([-110.7916091, 38.4068641]).addTo(this.map);
+    for(let i=0;i<this.allMarkers.length;i++){
+      new mapboxgl.Marker().setLngLat([this.allMarkers[i].latitude,this.allMarkers[i].longitude]).addTo(this.map);
+      //console.log(this.markers[i].latitude,this.markers[i].longitude)
     }
+
+    //this.addMarkerAtMap(-110.7916091, 38.4068641)
     // MARKERS
     /*const marker3 = new mapboxgl.Marker()
       .setLngLat([-110.7916091, 38.4068641])
@@ -95,6 +65,31 @@ export default {
       .addTo(this.map);
 */
   },
+  methods: {
+    addMarkerAtMap(latitude, longitude) {
+      console.log(latitude, longitude);
+      var newMarkerObject = new mapboxgl.Marker().setLngLat([latitude, longitude]).addTo(this.map);
+      var newMarker = { markerObject: newMarkerObject, latitude: latitude, longitude: longitude };
+      this.allMarkers.push(newMarker);
+      console.log(this.allMarkers);
+      window.alert("Marker added");
+    },
+    deleteMarkerAtMap(latitude, longitude){
+      // Find the corresponding marker entry in allMarkers.
+      for (let i = 0; i < this.allMarkers.length; i++) {
+        if (this.allMarkers[i].latitude == latitude && this.allMarkers[i].longitude == longitude) {
+          this.allMarkers[i].markerObject.remove();
+          this.allMarkers.splice(i, 1);
+          break;
+        }
+      }
+
+    },
+    push(){
+      //let marker = { latitude: latitude, longitude: longitude };
+      //this.allMarkers.push(marker);
+    }
+  },
 }
 
 
@@ -104,11 +99,10 @@ export default {
     <div class="left"></div>
     <div class="center"></div>
     <div class="right">
-      <MarkerSidebar></MarkerSidebar>
+      <MarkerSidebar @addMarker="addMarkerAtMap" @deleteMarker="deleteMarkerAtMap"></MarkerSidebar>
     </div>
   </div>
   <div id="map" ref="map"></div>
-  <!-- The Div label, which is the CSS-CCS class, serves to give the appearance of a coordinate system on the map.  -->
   <div class="gridContainer">
     <div class="css-ccs">
       <div class="dot" style="--x: -3;"></div>
@@ -118,8 +112,8 @@ export default {
     </div>
   </div>
 </template>
-<style scoped>
 
+<style scoped>
 #body {
   overflow: hidden;
 }
@@ -131,11 +125,12 @@ export default {
   /* sepia(100%) hue-rotate(165deg) saturate(40%) brightness(0.7); */
   position: absolute;
 }
-.interface{
+
+.interface {
   position: absolute;
   height: 100vh;
   width: 100vw;
-  display:flex;
+  display: flex;
   justify-content: center;
   align-items: center;
   top: 0;
@@ -158,6 +153,7 @@ export default {
   border-radius: 10px;
   background-color: rgba(50, 117, 53, 0.349);
 }
+
 .gridContainer {
   padding: none;
   margin: none;
@@ -166,6 +162,7 @@ export default {
   height: 100vh;
   pointer-events: none;
 }
+
 .css-ccs {
   --c: 10;
   --cx: 5;
