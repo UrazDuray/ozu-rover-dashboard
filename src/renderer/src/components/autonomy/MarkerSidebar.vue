@@ -1,234 +1,254 @@
 <script>
+import mapboxGl from 'mapbox-gl';
 
 export default {
-
-    data() {
-        return {
-            markerTypes: [
-                { type: "Hammer" },
-                { type: "Bottle" },
-                { type: "ArUco" }
-            ],
-            selected: false,
-            markers: [],
-
-        }
+  data() {
+    return {
+      markerTypes: [
+        { type: "Hammer" },
+        { type: "Bottle" },
+        { type: "ArUco" }
+      ],
+      selected: false,
+      markers: [],
+      flaskBackendUrl: "http://localhost:5000/goal/", // URI for Back-end
+      marker: {
+        type: undefined,
+        gps: [undefined, undefined],
+      }
+    }
+  },
+  mounted() {
+      this.changeSelected();
+  },
+  methods: {
+    changeSelected() {
+      const marker = document.getElementById("markerType");
+      if (marker.value == "ArUco") {
+        this.selected = true;
+      } else {
+        this.selected = false;
+      }
     },
-    mounted() {
-        this.changeSelected();
-    },
-    methods: {
-        changeSelected() {
-            //this.$emit('markerTypeChange', marker);
-            const marker = document.getElementById("markerType");
-            if (marker.value == "ArUco") {
-                this.selected = true;
-            } else {
-                this.selected = false;
-            }
-        },
-        addMarker() {
-            let latitude = document.getElementById("inputLatitude").value;
-            let longitude = document.getElementById("inputLongitude").value;
-            let markerType = document.getElementById("markerType").value;
+    addMarker() {
+      let latitude = document.getElementById("inputLatitude").value;
+      let longitude = document.getElementById("inputLongitude").value;
+      let markerType = document.getElementById("markerType").value;
 
-            if (this.selected == true) {
-                let markerID = document.getElementById("markerID").value;
-                let marker = { latitude: latitude, longitude: longitude, markerType: markerType, markerID: markerID };
-                this.markers.push(marker);
-            } else {
-                //console.log(x, y, markerType);
-                let marker = { latitude: latitude, longitude: longitude,  markerType: markerType };
-                this.markers.push(marker);
-            }
-            console.log(this.markers);
-            //console.log(this.allMarkers[0].x);
-            //console.log("changeSelected")
-        },
-        deleteMarker(marker){
-            this.markers.splice(this.markers.indexOf(marker), 1);
-        },
-        sendMarkers(){
-         //   this.$emit('sendMarkers', this.markers);
-        }
+      if (this.selected == true) {
+        let markerID = document.getElementById("markerID").value;
+        let marker = { latitude: latitude, longitude: longitude, markerType: markerType, markerID: markerID };
+        this.markers.push(marker);
+      } else {
+        let marker = { latitude: latitude, longitude: longitude, markerType: markerType };
+        this.markers.push(marker);
+      }
+      //this.$emit("addMarker", latitude, longitude);
+      this.$emit("addMarker", -110.7915091, 38.4063641);
     },
+    deleteMarker(marker) {
+      this.markers.splice(this.markers.indexOf(marker), 1);
+      //this.$emit("deleteMarker", latitude, longitude);
+      this.$emit("deleteMarker", -110.7915091, 38.4063641)
+    },
+    sendMarker(mark) {
+      this.marker.gps[0] = mark.latitude;
+      this.marker.gps[1] = mark.longitude;
+      this.marker.type = mark.markerType;
+      console.log(this.marker);
+      axios.post(this.flaskBackendUrl + "enqueue", this.marker).then((response) => {
+        console.log("Successful", response);
+      }).catch((error) => {
+        console.log("Error :", error);
+      });
+    },
+    abortButton(){
+      this.marker.gps[0] = mark.latitude;
+      this.marker.gps[1] = mark.longitude;
+      this.marker.type = mark.markerType;
+      console.log(this.marker);
+      axios.post(this.flaskBackendUrl + "abort", this.marker).then((response) => {
+        console.log("Successful", response);
+      }).catch((error) => {
+        console.log("Error: :", error);
+      });
+    }
+  },
 }
 </script>
 
 <template id="bodyMarkerSideBar">
-    <div class="containerMarkerSidebar">
-        <header class="header">
-            <ul>
-                <li v-for="task in markers">
-                    <div id="markerTypeImg"><img src="" alt="">{{ task.markerType }}</div>
-                    <div id="coordinateLatitudeLongitude">
-                        {{ task.latitude }}
-                        {{ task.longitude }}
-                    </div>
-                    <div id="markerIDOutput">
-                        {{ task.markerID }}
-                    </div>
-                    <div id="greenRedButtons">
-                        <button id="greenButton"></button>
-                        <button id="redButton" @click="deleteMarker(task)"></button>
-                    </div>
+  <div class="containerMarkerSidebar">
+    <header class="header">
+      <ul>
+        <li v-for="task in markers">
+          <div id="markerTypeImg"><img src="Hammer.svg" alt="">{{ task.markerType }}</div>
+          <div id="coordinateLatitudeLongitude">
+            {{ task.latitude }}
+            {{ task.longitude }}
+          </div>
+          <div id="markerIDOutput">
+            {{ task.markerID }}
+          </div>
+          <div id="greenRedButtons">
+            <button id="greenButton" @click="sendMarker(task)"></button>
+            <button id="redButton" @click="deleteMarker(task)"></button>
+          </div>
+        </li>
+      </ul>
+    </header>
+    <div class="section">
+        <div class="addButton">
+            <button @click="this.addMarker()" class="buttons" id="addButton">
+                Add
+            </button>
+        </div>
+        <div class="inputs">
 
-                </li>
-            </ul>
-        </header>
-
-        <div class="section">
-            <div class="addButton">
-                <button @click="this.addMarker()" class="buttons" id="addButton">
-                    Add
-                </button>
+            <div class="coordinate">
+                <input id="inputLatitude" type="text" placeholder="LAT">
+                <input id="inputLongitude" type="text" placeholder="LON">
             </div>
-            <div class="inputs">
 
-                <div class="coordinate">
-                    <input id="inputLatitude" type="text" placeholder="LAT">
-                    <input id="inputLongitude" type="text" placeholder="LON">
-                </div>
-
-                <!-- Marker Types -->
-                <div class="markerTypes">
-                    <select id="markerType" @click="this.changeSelected()">
-                        <option v-for="marker in markerTypes"> {{ marker.type }} </option>
-                    </select>
-                    <input id="markerID" v-if="this.selected" type="text" maxlength="4">
-                </div>
-
-            </div>
-            <div class="abortAndPauseButton">
-                <button class="buttons" id="abortButton">
-                    Abort
-                </button>
-                <button class="buttons" id="pauseButton">
-                    Pause
-                </button>
+            <!-- Marker Types -->
+            <div class="markerTypes">
+                <select id="markerType" @click="this.changeSelected()">
+                    <option v-for="marker in markerTypes"> {{ marker.type }} </option>
+                </select>
+                <input id="markerID" v-if="this.selected" type="text" maxlength="4">
             </div>
 
         </div>
-
+        <div class="abortAndPauseButton">
+            <button class="buttons" id="abortButton">
+                Abort
+            </button>
+            <!-- <button class="buttons" id="pauseButton">
+                Pause
+            </button> -->
+        </div>
 
     </div>
+
+
+  </div>
 </template>
 
 <style scoped>
-/* #bodyMarkerSideBar {} */
 
 .containerMarkerSidebar {
-    pointer-events: all;
+  pointer-events: all;
 }
 
 .header {
-    height: 35vh;
-
+  height: 35vh;
 }
 
 .header ul li {
-    list-style: none;
+  list-style: none;
 
 }
 
 #markerTypeImg {
-    display: inline-block;
-    margin-left: -1rem;
+  display: inline-block;
+  margin-left: -1rem;
 }
 
 #coordinateLatitudeLongitude {
-    display: inline-block;
-    margin: .4rem;
+  display: inline-block;
+  margin: .4rem;
 }
+
 #markerIDOutput {
-    display: inline-block;
-    margin: .4rem;
-}
-#greenRedButtons{
-    float: right;
-    margin-right: .5rem;
+  display: inline-block;
+  margin: .4rem;
 }
 
-#greenButton{
-    background-color: rgb(63, 248, 63);
-    border-radius: 50%;
-    height: 1rem;
+#greenRedButtons {
+  float: right;
+  margin-right: .5rem;
 }
 
-#redButton{
-    background-color: red;
-    border-radius: 50%;
-    height: 1rem;
+#greenButton {
+  background-color: rgb(63, 248, 63);
+  border-radius: 50%;
+  height: 1rem;
+}
+
+#redButton {
+  background-color: red;
+  border-radius: 50%;
+  height: 1rem;
 }
 
 .section {
-    height: 20vh;
-    display: flex;
-    flex-direction: column;
+  height: 20vh;
+  display: flex;
+  flex-direction: column;
 }
 
 #addButton {
-    display: flex;
-    float: right;
+  display: flex;
+  float: right;
 }
 
 .inputs {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    width: 100%;
-    height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 100%;
+  height: 100%;
 }
 
 .coordinate {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    width: 30%;
-    height: 100%;
-    color: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 30%;
+  height: 100%;
+  color: black;
 }
 
 #inputLatitude,
 #inputLongitude {
-    color: black;
+  color: black;
 }
 
 .inputs select,
 .inputs select option {
-    color: black;
-    height: 35%;
-    display: flex;
-    flex-direction: row;
-    text-align: center;
+  color: black;
+  height: 35%;
+  display: flex;
+  flex-direction: row;
+  text-align: center;
 }
 
 .markerTypes {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #markerID {
-    width: 3rem;
-    margin-left: .5rem;
-    color: black;
+  width: 3rem;
+  margin-left: .5rem;
+  color: black;
 }
 
 
 .addButton {
-    width: 100%;
-    display: block;
+  width: 100%;
+  display: block;
 }
 
 .abortAndPauseButton {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
 }
 
 .buttons {
-    color: black;
+  color: black;
 }
 </style>
