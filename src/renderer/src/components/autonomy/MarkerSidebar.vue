@@ -1,9 +1,11 @@
 <script>
-import mapboxGl from 'mapbox-gl';
+import MarkerDictionary from './Types.js';
 
 export default {
   data() {
     return {
+      flaskBackendUrl: "http://127.0.0.1:5000/goal/", // URI for Back-end
+      dictionary: new MarkerDictionary(),
       markerTypes: [
         { type: "Hammer" },
         { type: "Bottle" },
@@ -11,7 +13,6 @@ export default {
       ],
       selected: false,
       markers: [],
-      flaskBackendUrl: "http://localhost:5000/goal/", // URI for Back-end
       marker: {
         type: undefined,
         gps: [undefined, undefined],
@@ -44,18 +45,17 @@ export default {
         this.markers.push(marker);
       }
       //this.$emit("addMarker", latitude, longitude);
-      this.$emit("addMarker", -110.7915091, 38.4063641);
+      this.$emit("addMarker", "-110.7915091", "38.4063641");
     },
     deleteMarker(marker) {
       this.markers.splice(this.markers.indexOf(marker), 1);
       //this.$emit("deleteMarker", latitude, longitude);
-      this.$emit("deleteMarker", -110.7915091, 38.4063641)
+      this.$emit("deleteMarker", "-110.7915091", "38.4063641")
     },
     sendMarker(mark) {
       this.marker.gps[0] = mark.latitude;
       this.marker.gps[1] = mark.longitude;
-      this.marker.type = mark.markerType;
-      console.log(this.marker);
+      this.marker.type = this.dictionary.getID(mark.markerType);
       axios.post(this.flaskBackendUrl + "enqueue", this.marker).then((response) => {
         console.log("Successful", response);
       }).catch((error) => {
