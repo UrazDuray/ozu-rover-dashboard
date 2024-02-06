@@ -1,12 +1,11 @@
 <script setup>
 import Navigation from './components/Navigation.vue';
 import HomeWindow from './components/HomeWindow.vue';
-import ConsoleWindow from './components/ConsoleWindow.vue';
+import ArmWindow from './components/ArmWindow.vue';
 import CamerasWindow from './components/CamerasWindow.vue';
 import ScienceWindow from './components/ScienceWindow.vue';
 import GraphsWindow from './components/GraphsWindow.vue';
 import GPSWindow from './components/GPSWindow.vue';
-// Pages are imported here
 </script>
 
 <script>
@@ -31,7 +30,7 @@ export default {
   },
   methods: {
     HandleRoverData(roverData){
-      // 
+      //
       if(roverData.timestamp > this.prevRoverTime){
         this.roverData = roverData
         this.prevRoverTime = roverData.timestamp
@@ -42,7 +41,7 @@ export default {
       }
 
       this.roverDataHistory.push(this.roverData)
-      
+
       //prevent memory leak
       if(this.roverDataHistory.length > this.maxHistoryLength) this.roverDataHistory.shift()
       //todo şu an sadece bi tane siliyo maxa kadar silmeli
@@ -105,7 +104,7 @@ export default {
   <Navigation :size-updater="sizeUpdater" @WindowChange="(window) => SetMode(window)"/>
   <div class="WindowsDivClass">
     <HomeWindow v-if="activeWindow == 'home' && roverData" :roverData="roverData"/>
-    <ConsoleWindow :consoleLogs="consoleLogs" v-else-if="activeWindow == 'console'"/>
+    <ArmWindow v-else-if="activeWindow == 'arm'"/>
     <CamerasWindow v-else-if="activeWindow == 'cameras'"/>
     <ScienceWindow :roverData="roverData" v-else-if="activeWindow == 'science'"/>
     <GraphsWindow :size-updater="sizeUpdater" :roverData="roverData" v-else-if="activeWindow == 'graphs'"/>
@@ -118,7 +117,7 @@ export default {
   --theme-color-1: rgb(15, 15, 15);
   --theme-color-2: rgb(37, 37, 37);
   --font-color-light: rgb(236, 236, 236);
-  
+
   --primary: rgb(9, 97, 43);
   --green: rgb(33, 224, 65);
   --red: rgb(224, 33, 33);
