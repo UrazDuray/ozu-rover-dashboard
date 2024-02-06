@@ -21,7 +21,8 @@ export default {
     this.map = new mapboxgl.Map({
       //container: this.$refs.map,
       container: 'map',
-      style: 'mapbox://styles/mapbox/satellite-streets-v12',
+      //style: 'mapbox://styles/mapbox/satellite-streets-v12',
+      style:'mapbox://styles/emrehancetin/cls50xjrr014u01plebk93muk',
       //style: 'mapbox://styles/mapbox/streets-v12',
       //style: 'mapbox://styles/mapbox/dark-v11',
       //style: 'mapbox://styles/examples/cj68bstx01a3r2rndlud0pwpv',

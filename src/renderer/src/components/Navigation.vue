@@ -5,9 +5,9 @@ export default {
   },
   computed: {
     windows() {
-      return ['home', 'console', 'science', 'cameras', 'graphs','GPS']
+      return ['home', 'arm', 'science', 'cameras', 'graphs','GPS']
       // The names of the pages are written
-    } 
+    }
   },
   data() {
     return {
@@ -20,10 +20,10 @@ export default {
     ChangeWindow(windowName){
       this.$emit('WindowChange', windowName)
       //It calls the 'windows change' method and gives the currently selected page as a parameter
-     
+
       this.selectedWindow = windowName
       // Makes the selected page equal to the value received as a parameter
-      
+
       const el = this.$refs[`ref_${windowName}`][0]
       const elData = {left: el.offsetLeft, top: el.offsetTop, height: el.offsetHeight, width: el.offsetWidth - 2}
       this.selectIndicatorData = elData
@@ -68,13 +68,13 @@ export default {
 <style scoped>
 .NavigationDiv{
   background-color: var(--theme-color-2);
-  
+
   height: var(--navigation-height);
   padding: 0;
   display: flex;
   justify-content: space-evenly;
   position: relative;
-  
+
 }
 .navigationButtonClass{
   font-size: 1.4rem;
