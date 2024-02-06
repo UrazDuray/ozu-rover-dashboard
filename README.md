@@ -23,9 +23,19 @@ An Electron application using Vuejs dedicated to the mission control of our Ares
     │           │   ├───imgs
     │           │   └───sounds
     │           └───components
+    │               ├───ArmWindow.vue
+    │               ├───CamerasWindow.vue
+    │               ├───GraphsWindow.vue
+    │               ├───HomeWindow.vue
+    │               ├───Navigation.vue
+    │               ├───ScienceWindow.vue
+    │               ├───Switch.vue
+    │               ├───Versions.vue
+    │               │
     │               ├───arm
     │               ├───autonomy
     │               └───locomotion
+    │
     ├───dev-app-update.yml
     ├───electron-builder.yml
     ├───electron.vite.config.js
@@ -35,6 +45,9 @@ An Electron application using Vuejs dedicated to the mission control of our Ares
     └───README.md
 
 If you are going to work on a page, they are contained within `src/renderer/components/<page_name>Window.vue`. You may create a new folder in `components/` with the name of your page (mind the lowercase standard) and develop additional sub-components there to use in the main page.
+
+> Note: Please use 2-width space indentation for consistency.
+
 
 ## For Ubuntu
 
