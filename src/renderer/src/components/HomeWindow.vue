@@ -4,7 +4,7 @@ import Switch from '../components/Switch.vue'
 import NoConnectionIcon from '../../../../resources/icons/NoConnectionIcon.png'
 import ConnectionIcon from '../../../../resources/icons/ConnectionIcon.png'
 import BatteryIcon from '../../../../resources/icons/BatteryIcon.svg'
-import ChartPlotter from './ChartPlotter.vue'
+import ChartPlotter from '../components/locomotion/ChartPlotter.vue'
 // Pages are imported here
 </script>
 

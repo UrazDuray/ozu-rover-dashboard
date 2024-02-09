@@ -1,6 +1,7 @@
 class MarkerDictionary {
   constructor() {
     this._dict = {
+      "ArUCO": 999,
       "Hammer": 1000,
       "Mullet": 1000,
       "Bottle": 1001

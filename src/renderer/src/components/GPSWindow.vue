@@ -21,24 +21,8 @@ export default {
     this.map = new mapboxgl.Map({
       //container: this.$refs.map,
       container: 'map',
-      //style: 'mapbox://styles/mapbox/satellite-streets-v12',
-     // style:'mapbox://styles/emrehancetin/cls50xjrr014u01plebk93muk',
-     style: {
-    version: 8,
-    sources: {
-      osm: {
-        type: 'raster',
-        tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
-        tileSize: 256,
-        attribution: 'Map tiles by <a target="_top" rel="noopener" href="https://tile.openstreetmap.org/">OpenStreetMap tile servers</a>, under the <a target="_top" rel="noopener" href="https://operations.osmfoundation.org/policies/tiles/">tile usage policy</a>. Data by <a target="_top" rel="noopener" href="http://openstreetmap.org">OpenStreetMap</a>'
-      }
-    },
-    layers: [{
-      id: 'osm',
-      type: 'raster',
-      source: 'osm',
-    }],
-  },
+      style: 'mapbox://styles/mapbox/satellite-streets-v12',
+      // style:'mapbox://styles/emrehancetin/cls50xjrr014u01plebk93muk',
       //style: 'mapbox://styles/mapbox/streets-v12',
       //style: 'mapbox://styles/mapbox/dark-v11',
       //style: 'mapbox://styles/examples/cj68bstx01a3r2rndlud0pwpv',
@@ -64,8 +48,8 @@ export default {
       this.map.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.5 });
 
     });
-    for(let i=0;i<this.allMarkers.length;i++){
-      new mapboxgl.Marker().setLngLat([this.allMarkers[i].latitude,this.allMarkers[i].longitude]).addTo(this.map);
+    for (let i = 0; i < this.allMarkers.length; i++) {
+      new mapboxgl.Marker().setLngLat([this.allMarkers[i].latitude, this.allMarkers[i].longitude]).addTo(this.map);
       //console.log(this.markers[i].latitude,this.markers[i].longitude)
     }
 
@@ -91,7 +75,7 @@ export default {
       console.log(this.allMarkers);
       window.alert("Marker added");
     },
-    deleteMarkerAtMap(latitude, longitude){
+    deleteMarkerAtMap(latitude, longitude) {
       // Find the corresponding marker entry in allMarkers.
       for (let i = 0; i < this.allMarkers.length; i++) {
         if (this.allMarkers[i].latitude == latitude && this.allMarkers[i].longitude == longitude) {
@@ -102,7 +86,7 @@ export default {
       }
 
     },
-    push(){
+    push() {
       //let marker = { latitude: latitude, longitude: longitude };
       //this.allMarkers.push(marker);
     }
