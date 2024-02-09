@@ -64,7 +64,7 @@ export default {
       this.ClearCanvas()
       this.GridDrawer()
       this.ctx.beginPath()
-      
+
       const pointCount = this.values.length
       const xStepSize = this.canvasDimensions[0] / pointCount
 
@@ -113,8 +113,8 @@ export default {
   mounted() {
     this.canvas = this.$refs.ref_canvas
     this.ctx = this.canvas.getContext("2d");
-    
-    this.canvasDimensions = [this.canvas.offsetWidth, this.canvas.offsetHeight]  
+
+    this.canvasDimensions = [this.canvas.offsetWidth, this.canvas.offsetHeight]
     this.GetChartDimensions()
     this.DrawChart()
   },
@@ -142,7 +142,7 @@ export default {
       <div ref="ref_chart" :class="'ChartPlotter'">
         <canvas class="CanvasClass" ref="ref_canvas"></canvas>
       </div>
-    </div>  
+    </div>
   </div>
 </template>
 
@@ -151,7 +151,7 @@ export default {
 .ChartMain{
   height: 100%;
   width: 100%;
-  
+
   display: flex;
   flex-direction: column;
   box-sizing: border-box;

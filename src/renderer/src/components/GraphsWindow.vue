@@ -1,5 +1,5 @@
 <script setup>
-import ChartPlotter from './ChartPlotter.vue'
+import ChartPlotter from './locomotion/ChartPlotter.vue'
 </script>
 
 <script>
@@ -136,7 +136,7 @@ export default {
           this.ArrayDataPusher(motor.temperature[0].data, (motorData[i].temperature).toFixed(3))
           this.ArrayDataPusher(motor.speed[0].data, (motorData[i].speed).toFixed(3))
         }
-        
+
       }
       // webkitRequestAnimationFrame(this.UpdateGraph);
     },
@@ -160,7 +160,7 @@ export default {
     ArrayDataPusher(arr, element){
       arr.shift()
       arr.push(element)
-      
+
       //todo remove this later (old apex)
       // return arr
     },
@@ -194,7 +194,7 @@ export default {
   mounted() {
     //set graph max data
     this.SetMaxGraphDataPoint()
-    
+
     //todo remove this later (old apex)
     // this.coloredChartOptions.current = this.ChangeChartOptionsColor('current')
     // this.coloredChartOptions.temperature = this.ChangeChartOptionsColor('temperature')
