@@ -68,7 +68,7 @@ export default {
 <style scoped>
 .NavigationDiv{
   background-color: var(--theme-color-2);
-
+  z-index: 100;
   height: var(--navigation-height);
   padding: 0;
   display: flex;
