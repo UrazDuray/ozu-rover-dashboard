@@ -1,4 +1,4 @@
-# ozu-rover-dashboard
+# ozu-rover-dashboard (Deimos)
 
 An Electron application using Vuejs dedicated to the mission control of our Ares planetary roaming vehicle.
 
@@ -115,3 +115,18 @@ $ npm run build:mac
 # For Linux
 $ npm run build:linux
 ```
+
+## Notes
+
+### Autonomy Mapping
+First, install the tile-server Docker image from DockerHub and run it.
+
+```sh
+docker pull toprakefe722/mbtiles-server-deimos:latest
+docker run -p 3000:3000 toprakefe722/mbtiles-server-deimos:latest
+```
+This will start up the tile server that our front-end will be receiving imagery from to display within the map.
+
+### Resources
+
+You may find our tile dataset in our shared Google drive, under the autonomy tab, `tiles.mbtiles`. You are free to add new data to this tileset, for which you may find the documentation in our Notion workspace.

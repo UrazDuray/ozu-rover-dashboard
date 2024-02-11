@@ -29,37 +29,38 @@ export default {
     MarkerSidebar
   },
   data() {
+    return {
+      map: null,
+      allMarkers: []
+    }
   },
   mounted() {
     this.map = L.map("map", {
-      center: L.latLng(40.731253, -73.996139),
+      center: L.latLng(0.0, 0.0),
       zoom: 12,
     });
-    
-    L.tileLayer("http://localhost:3000/?z={z}&x={x}&y={y}.png", {
-    }).addTo(this.map);
-
-    L.marker([38.4065, -110.7919]).addTo(this.map);
+    var layer = L.tileLayer("http://localhost:3000/?z={z}&x={x}&y={y}.png", {}).addTo(this.map);
   },
   methods: {
-    addMarkerAtMap(latitude, longitude) {
-      // console.log(latitude, longitude);
-      // var newMarkerObject = new mapboxgl.Marker().setLngLat([latitude, longitude]).addTo(this.map);
-      // var newMarker = { markerObject: newMarkerObject, latitude: latitude, longitude: longitude };
-      // this.allMarkers.push(newMarker);
-      // console.log(this.allMarkers);
-      window.alert("Marker added");
+    addMarkerAtMap(latitude, longitude, _mType, _mID, id) {
+      let lat = parseFloat(latitude);
+      let lon = parseFloat(longitude);
+      var newMarker = new L.marker([lat, lon]).addTo(this.map);
+      this.allMarkers.push({
+        latitude: lat,
+        longitude: lon,
+        markerObject: newMarker,
+        id: id
+      });
     },
-    deleteMarkerAtMap(latitude, longitude) {
-      // for (let i = 0; i < this.allMarkers.length; i++) {
-      //   if (this.allMarkers[i].latitude == latitude && this.allMarkers[i].longitude == longitude) {
-      //     this.allMarkers[i].markerObject.remove();
-      //     this.allMarkers.splice(i, 1);
-      //     break;
-      //   }
-      // }
-    },
-    push() {
+    deleteMarkerAtMap(id) {
+      for (let i = 0; i < this.allMarkers.length; i++) {
+        if (this.allMarkers[i].id === id) {
+          this.allMarkers[i].markerObject.remove();
+          this.allMarkers.splice(i, 1);
+          break;
+        }
+      }
     }
   },
 }

@@ -16,7 +16,10 @@ export default {
       markers: [],
       marker: {
         type: undefined,
-        gps: [undefined, undefined],
+        latitude: undefined,
+        longitude: undefined,
+        markerID: undefined,
+        id: undefined
       },
     }
   },
@@ -28,22 +31,27 @@ export default {
       let latitude = document.getElementById("inputLatitude").value;
       let longitude = document.getElementById("inputLongitude").value;
       let markerType = document.getElementById("markerType").value;
-
-      if (this.selected == true) {
-        let markerID = document.getElementById("markerID").value;
-        let marker = { latitude: latitude, longitude: longitude, markerType: markerType, markerID: markerID };
-        this.markers.push(marker);
-      } else {
-        let marker = { latitude: latitude, longitude: longitude, markerType: markerType };
-        this.markers.push(marker);
+      let markerID = undefined;
+      let id = this.generateID();
+      
+      if (this.hasAdditionalOptions()) {
+        markerID = document.getElementById("markerID").value;
       }
-      //this.$emit("addMarker", latitude, longitude);
-      this.$emit("addMarker", "-110.7915091", "38.4063641");
+      
+      let marker = {
+        latitude: latitude,
+        longitude: longitude,
+        markerType: markerType,
+        markerID: markerID,
+        id: id
+      };
+
+      this.markers.push(marker);
+      this.$emit("addMarker", latitude, longitude, markerType, markerID, id);
     },
     deleteMarker(marker) {
       this.markers.splice(this.markers.indexOf(marker), 1);
-      //this.$emit("deleteMarker", latitude, longitude);
-      this.$emit("deleteMarker", "-110.7915091", "38.4063641")
+      this.$emit("deleteMarker", marker.id);
     },
     sendMarker(mark) {
       this.marker.gps[0] = mark.latitude;
@@ -71,6 +79,12 @@ export default {
         return true;
       } else {
         return false;
+      }
+    },
+    generateID() {
+      var id = 0;
+      return function () {
+        return id++;
       }
     }
   }
@@ -114,7 +128,7 @@ export default {
         <!-- <img :src="Hammer" alt="Hammer"> -->
         <!-- <Hammer /> -->
         <div class="markerTypes">
-          <select v-model="selected" @change="registerSelected" id="markerType">
+          <select v-model="selected" id="markerType">
             <option v-for="marker in markerTypes">
               <span id="optionSelector">
                 {{ marker.type }}
@@ -122,7 +136,7 @@ export default {
             </option>
           </select>
           <MarkerIcon :id="this.dictionary.getID(this.selected)"/>
-          <input v-if="hasAdditionalOptions(this.selected)" id="markerID" type="text" maxlength="4">
+          <input v-if="hasAdditionalOptions()" id="markerID" type="text" maxlength="4">
         </div>
         
 

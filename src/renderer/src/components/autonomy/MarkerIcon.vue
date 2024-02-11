@@ -11,7 +11,7 @@ export default {
   name: 'MarkerIcon',
   props: {
     id: {
-      type: String,
+      type: Number,
       default: '0'
     }
   }
