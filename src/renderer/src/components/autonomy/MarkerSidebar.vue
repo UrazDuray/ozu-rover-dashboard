@@ -1,5 +1,6 @@
 <script>
 import MarkerDictionary from './Types.js';
+import MarkerIcon from './MarkerIcon.vue';
 
 export default {
   data() {
@@ -9,48 +10,48 @@ export default {
       markerTypes: [
         { type: "Hammer" },
         { type: "Bottle" },
-        { type: "ArUco" }
+        { type: "ArUCO" }
       ],
-      selected: false,
+      selected: "Hammer",
       markers: [],
       marker: {
         type: undefined,
-        gps: [undefined, undefined],
-      }
+        latitude: undefined,
+        longitude: undefined,
+        markerID: undefined,
+        id: undefined
+      },
     }
   },
-  mounted() {
-      this.changeSelected();
+  components:{
+    MarkerIcon
   },
   methods: {
-    changeSelected() {
-      const marker = document.getElementById("markerType");
-      if (marker.value == "ArUco") {
-        this.selected = true;
-      } else {
-        this.selected = false;
-      }
-    },
     addMarker() {
       let latitude = document.getElementById("inputLatitude").value;
       let longitude = document.getElementById("inputLongitude").value;
       let markerType = document.getElementById("markerType").value;
-
-      if (this.selected == true) {
-        let markerID = document.getElementById("markerID").value;
-        let marker = { latitude: latitude, longitude: longitude, markerType: markerType, markerID: markerID };
-        this.markers.push(marker);
-      } else {
-        let marker = { latitude: latitude, longitude: longitude, markerType: markerType };
-        this.markers.push(marker);
+      let markerID = undefined;
+      let id = this.generateID();
+      
+      if (this.hasAdditionalOptions()) {
+        markerID = document.getElementById("markerID").value;
       }
-      //this.$emit("addMarker", latitude, longitude);
-      this.$emit("addMarker", "-110.7915091", "38.4063641");
+      
+      let marker = {
+        latitude: latitude,
+        longitude: longitude,
+        markerType: markerType,
+        markerID: markerID,
+        id: id
+      };
+
+      this.markers.push(marker);
+      this.$emit("addMarker", latitude, longitude, markerType, markerID, id);
     },
     deleteMarker(marker) {
       this.markers.splice(this.markers.indexOf(marker), 1);
-      //this.$emit("deleteMarker", latitude, longitude);
-      this.$emit("deleteMarker", "-110.7915091", "38.4063641")
+      this.$emit("deleteMarker", marker.id);
     },
     sendMarker(mark) {
       this.marker.gps[0] = mark.latitude;
@@ -62,7 +63,7 @@ export default {
         console.log("Error :", error);
       });
     },
-    abortButton(){
+    abortButton() {
       this.marker.gps[0] = mark.latitude;
       this.marker.gps[1] = mark.longitude;
       this.marker.type = mark.markerType;
@@ -72,8 +73,21 @@ export default {
       }).catch((error) => {
         console.log("Error: :", error);
       });
+    },
+    hasAdditionalOptions() {
+      if (this.selected == "ArUCO") {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    generateID() {
+      var id = 0;
+      return function () {
+        return id++;
+      }
     }
-  },
+  }
 }
 </script>
 
@@ -98,35 +112,43 @@ export default {
       </ul>
     </header>
     <div class="section">
-        <div class="addButton">
-            <button @click="this.addMarker()" class="buttons" id="addButton">
-                Add
-            </button>
+      <div class="addButton">
+        <button @click="this.addMarker()" class="buttons" id="addButton">
+          Add
+        </button>
+      </div>
+      <div class="inputs">
+        
+        <div class="coordinate">
+          <input id="inputLatitude" type="text" placeholder="LAT">
+          <input id="inputLongitude" type="text" placeholder="LON">
         </div>
-        <div class="inputs">
-
-            <div class="coordinate">
-                <input id="inputLatitude" type="text" placeholder="LAT">
-                <input id="inputLongitude" type="text" placeholder="LON">
-            </div>
-
-            <!-- Marker Types -->
-            <div class="markerTypes">
-                <select id="markerType" @click="this.changeSelected()">
-                    <option v-for="marker in markerTypes"> {{ marker.type }} </option>
-                </select>
-                <input id="markerID" v-if="this.selected" type="text" maxlength="4">
-            </div>
-
+        
+        <!-- Marker Types -->
+        <!-- <img :src="Hammer" alt="Hammer"> -->
+        <!-- <Hammer /> -->
+        <div class="markerTypes">
+          <select v-model="selected" id="markerType">
+            <option v-for="marker in markerTypes">
+              <span id="optionSelector">
+                {{ marker.type }}
+              </span>
+            </option>
+          </select>
+          <MarkerIcon :id="this.dictionary.getID(this.selected)"/>
+          <input v-if="hasAdditionalOptions()" id="markerID" type="text" maxlength="4">
         </div>
-        <div class="abortAndPauseButton">
-            <button class="buttons" id="abortButton">
-                Abort
-            </button>
-            <!-- <button class="buttons" id="pauseButton">
+        
+
+      </div>
+      <div class="abortAndPauseButton">
+        <button class="buttons" id="abortButton">
+          Abort
+        </button>
+        <!-- <button class="buttons" id="pauseButton">
                 Pause
             </button> -->
-        </div>
+   </div>
 
     </div>
 
@@ -135,7 +157,6 @@ export default {
 </template>
 
 <style scoped>
-
 .containerMarkerSidebar {
   pointer-events: all;
 }

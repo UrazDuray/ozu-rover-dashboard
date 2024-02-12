@@ -1,100 +1,3 @@
-<script>
-import MarkerSidebar from './autonomy/MarkerSidebar.vue';
-import mapboxgl from 'mapbox-gl';
-//import audio1 from '../assets/sounds/sound.mp3';
-
-export default {
-  name: "GPSWindow",
-  components: {
-    MarkerSidebar
-  },
-  data() {
-    return {
-      map: null,
-      mapboxAccessToken: "pk.eyJ1IjoiZW1yZWhhbmNldGluIiwiYSI6ImNscW5tcXZrODMwOTQycXJxZWVyYzYwNmoifQ.d_BUVkl22ZIhhK1_Qrt34g",
-      allMarkers: []
-    };
-  },
-  mounted() {
-    mapboxgl.accessToken = this.mapboxAccessToken; // Set the Mapbox access token
-
-    this.map = new mapboxgl.Map({
-      //container: this.$refs.map,
-      container: 'map',
-      //style: 'mapbox://styles/mapbox/satellite-streets-v12',
-      style:'mapbox://styles/emrehancetin/cls50xjrr014u01plebk93muk',
-      //style: 'mapbox://styles/mapbox/streets-v12',
-      //style: 'mapbox://styles/mapbox/dark-v11',
-      //style: 'mapbox://styles/examples/cj68bstx01a3r2rndlud0pwpv',
-      zoom: 18,
-      //zoom:9,
-      //center: [29.260582, 41.032640], // Ozyeğin Footbal Field
-      //center:[-110.7921091,38.4051641],
-      center: [-110.7916091, 38.4063641], // better than other location
-      //41.032640, 29.260582
-      /*pitch: 80,
-      bearing: 41,*/
-    });
-
-    this.map.on('style.load', () => {
-
-      this.map.addSource('mapbox-dem', {
-        'type': 'raster-dem',
-        'url': 'mapbox://mapbox.mapbox-terrain-dem-v1',
-        'tileSize': 512,
-        'maxzoom': 18
-      });
-
-      this.map.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.5 });
-
-    });
-    for(let i=0;i<this.allMarkers.length;i++){
-      new mapboxgl.Marker().setLngLat([this.allMarkers[i].latitude,this.allMarkers[i].longitude]).addTo(this.map);
-      //console.log(this.markers[i].latitude,this.markers[i].longitude)
-    }
-
-    //this.addMarkerAtMap(-110.7916091, 38.4068641)
-    // MARKERS
-    /*const marker3 = new mapboxgl.Marker()
-      .setLngLat([-110.7916091, 38.4068641])
-      .addTo(this.map);
-    const marker1 = new mapboxgl.Marker()
-      .setLngLat([-110.7916091, 38.4068641])
-      .addTo(this.map);
-    const marker2 = new mapboxgl.Marker()
-      .setLngLat([-110.7915091, 38.4063641])
-      .addTo(this.map);
-*/
-  },
-  methods: {
-    addMarkerAtMap(latitude, longitude) {
-      console.log(latitude, longitude);
-      var newMarkerObject = new mapboxgl.Marker().setLngLat([latitude, longitude]).addTo(this.map);
-      var newMarker = { markerObject: newMarkerObject, latitude: latitude, longitude: longitude };
-      this.allMarkers.push(newMarker);
-      console.log(this.allMarkers);
-      window.alert("Marker added");
-    },
-    deleteMarkerAtMap(latitude, longitude){
-      // Find the corresponding marker entry in allMarkers.
-      for (let i = 0; i < this.allMarkers.length; i++) {
-        if (this.allMarkers[i].latitude == latitude && this.allMarkers[i].longitude == longitude) {
-          this.allMarkers[i].markerObject.remove();
-          this.allMarkers.splice(i, 1);
-          break;
-        }
-      }
-
-    },
-    push(){
-      //let marker = { latitude: latitude, longitude: longitude };
-      //this.allMarkers.push(marker);
-    }
-  },
-}
-
-
-</script>
 <template id="body">
   <div class="interface">
     <div class="left"></div>
@@ -114,17 +17,68 @@ export default {
   </div>
 </template>
 
+<script>
+import MarkerSidebar from './autonomy/MarkerSidebar.vue';
+import mapboxgl from 'mapbox-gl';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css'
+
+export default {
+  name: "GPSWindow",
+  components: {
+    MarkerSidebar
+  },
+  data() {
+    return {
+      map: null,
+      allMarkers: []
+    }
+  },
+  mounted() {
+    this.map = L.map("map", {
+      center: L.latLng(0.0, 0.0),
+      zoom: 12,
+    });
+    var layer = L.tileLayer("http://localhost:3000/?z={z}&x={x}&y={y}.png", {}).addTo(this.map);
+  },
+  methods: {
+    addMarkerAtMap(latitude, longitude, _mType, _mID, id) {
+      let lat = parseFloat(latitude);
+      let lon = parseFloat(longitude);
+      var newMarker = new L.marker([lat, lon]).addTo(this.map);
+      this.allMarkers.push({
+        latitude: lat,
+        longitude: lon,
+        markerObject: newMarker,
+        id: id
+      });
+    },
+    deleteMarkerAtMap(id) {
+      for (let i = 0; i < this.allMarkers.length; i++) {
+        if (this.allMarkers[i].id === id) {
+          this.allMarkers[i].markerObject.remove();
+          this.allMarkers.splice(i, 1);
+          break;
+        }
+      }
+    }
+  },
+}
+</script>
+
+
 <style scoped>
 #body {
   overflow: hidden;
 }
 
 #map {
-  width: 100vw;
-  height: 100vh;
-  filter: grayscale(100%) contrast(100%) brightness(50%) sepia(100%) saturate(200%) hue-rotate(60deg) brightness(60%) contrast(135%);
-  /* sepia(100%) hue-rotate(165deg) saturate(40%) brightness(0.7); */
-  position: absolute;
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    bottom: 0;
+    width: 100vw;
+    filter: sepia(100%) hue-rotate(90deg) saturate(100%) brightness(70%) contrast(200%);
 }
 
 .interface {
