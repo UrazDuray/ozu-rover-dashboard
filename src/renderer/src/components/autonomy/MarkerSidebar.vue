@@ -21,6 +21,7 @@ export default {
         markerID: undefined,
         id: undefined
       },
+      center: [-110.7916091, 38.4063641],
     }
   },
   components:{
