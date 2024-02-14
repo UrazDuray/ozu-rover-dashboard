@@ -7,6 +7,7 @@ import ScienceWindow from './components/ScienceWindow.vue';
 import GraphsWindow from './components/GraphsWindow.vue';
 import GPSWindow from './components/GPSWindow.vue';
 import TestWindow from './components/TestWindow.vue';
+import ArmPreviewWindow from "./components/ArmPreviewWindow.vue"
 </script>
 
 <script>
@@ -111,6 +112,7 @@ export default {
     <GraphsWindow :size-updater="sizeUpdater" :roverData="roverData" v-else-if="activeWindow == 'graphs'"/>
     <GPSWindow v-else-if="activeWindow=='GPS'"/>
     <TestWindow v-else-if="activeWindow=='test'"/>
+    <ArmPreviewWindow v-else-if="activeWindow=='armPreview'" />
   </div>
 </template>
 
