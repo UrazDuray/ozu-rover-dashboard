@@ -5,7 +5,7 @@
   import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
   import { ColladaLoader } from 'three/examples/jsm/loaders/ColladaLoader.js';
   import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js'
-  import {registerDragEvents} from "../ArmPreviewDragAndDrop"
+  import {registerDragEvents} from "../urdfScripts/ArmPreviewDragAndDrop"
   import URDFManipulator from "../urdfScripts/urdf-manipulator-element"
   customElements.define('urdf-viewer', URDFManipulator);
 
