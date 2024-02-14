@@ -21,9 +21,11 @@ export default {
         markerID: undefined,
         id: undefined
       },
+      center: [-110.7916091, 38.4063641],
+      markerURL: null,
     }
   },
-  components:{
+  components: {
     MarkerIcon
   },
   methods: {
@@ -33,16 +35,15 @@ export default {
       let markerType = document.getElementById("markerType").value;
       let markerID = undefined;
       let id = this.generateID();
-      
       if (this.hasAdditionalOptions()) {
         markerID = document.getElementById("markerID").value;
       }
-      
       let marker = {
         latitude: latitude,
         longitude: longitude,
         markerType: markerType,
         markerID: markerID,
+        markerURL: "../../../src/assets/imgs/" + markerType + ".svg",
         id: id
       };
 
@@ -96,7 +97,7 @@ export default {
     <header class="header">
       <ul>
         <li v-for="task in markers">
-          <div id="markerTypeImg"><img src="Hammer.svg" alt="">{{ task.markerType }}</div>
+          <div id="markerTypeImg"><img :src="task.markerURL" alt="Icon"></div>
           <div id="coordinateLatitudeLongitude">
             {{ task.latitude }}
             {{ task.longitude }}
@@ -118,12 +119,12 @@ export default {
         </button>
       </div>
       <div class="inputs">
-        
+
         <div class="coordinate">
           <input id="inputLatitude" type="text" placeholder="LAT">
           <input id="inputLongitude" type="text" placeholder="LON">
         </div>
-        
+
         <!-- Marker Types -->
         <!-- <img :src="Hammer" alt="Hammer"> -->
         <!-- <Hammer /> -->
@@ -135,10 +136,10 @@ export default {
               </span>
             </option>
           </select>
-          <MarkerIcon :id="this.dictionary.getID(this.selected)"/>
+          <MarkerIcon :id="this.dictionary.getID(this.selected)" />
           <input v-if="hasAdditionalOptions()" id="markerID" type="text" maxlength="4">
         </div>
-        
+
 
       </div>
       <div class="abortAndPauseButton">
@@ -148,7 +149,7 @@ export default {
         <!-- <button class="buttons" id="pauseButton">
                 Pause
             </button> -->
-   </div>
+      </div>
 
     </div>
 
@@ -173,6 +174,11 @@ export default {
 #markerTypeImg {
   display: inline-block;
   margin-left: -1rem;
+}
+
+#markerTypeImg img {
+  width: 3rem;
+  height: 3rem;
 }
 
 #coordinateLatitudeLongitude {

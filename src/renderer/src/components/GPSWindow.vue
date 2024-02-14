@@ -1,5 +1,6 @@
 <template id="body">
   <div class="interface">
+
     <div class="left"></div>
     <div class="center"></div>
     <div class="right">
@@ -22,6 +23,7 @@ import MarkerSidebar from './autonomy/MarkerSidebar.vue';
 import mapboxgl from 'mapbox-gl';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css'
+import axios from 'axios';
 
 export default {
   name: "GPSWindow",
@@ -31,21 +33,49 @@ export default {
   data() {
     return {
       map: null,
-      allMarkers: []
+      allMarkers: [],
+      rover: null,
+      roverData: {
+        latitude: 38.4063641,
+        longitude: -110.7916091
+      },
+      tempMarker: null,
     }
   },
   mounted() {
     this.map = L.map("map", {
       center: L.latLng(0.0, 0.0),
-      zoom: 12,
+      center: L.latLng(38.4063641, -110.7916091),
+      zoom: 20,
     });
+    this.map.on('click', (e) => {
+      let lat = e.latlng.lat;
+      let lon = e.latlng.lng;
+      if (this.tempMarker) {
+        this.tempMarker.remove();
+      }
+      this.tempMarker = new L.marker([lat, lon]).addTo(this.map);
+      this.tempMarker.bindPopup("<b style='color:black'>" + "Lat: " + lat + "<br>" + "Lon: " + lon + "</b>").openPopup();
+    });
+
     var layer = L.tileLayer("http://localhost:3000/?z={z}&x={x}&y={y}.png", {}).addTo(this.map);
+    this.roverMove();
+    this.fetchData();
+
+    setInterval(() => {
+      this.fetchData();
+    }, 100);
   },
   methods: {
     addMarkerAtMap(latitude, longitude, _mType, _mID, id) {
       let lat = parseFloat(latitude);
       let lon = parseFloat(longitude);
-      var newMarker = new L.marker([lat, lon]).addTo(this.map);
+      let url = "../../src/assets/imgs/"+_mType+".svg";      
+      var icon = L.icon({
+          iconUrl: url,
+          iconSize: [55, 55], // size of the icon,  
+        })
+      var newMarker = new L.marker([lat, lon], { icon: icon }).addTo(this.map);
       this.allMarkers.push({
         latitude: lat,
         longitude: lon,
@@ -61,7 +91,38 @@ export default {
           break;
         }
       }
-    }
+    },
+    roverMove() {
+      var greenIcon = L.icon({
+        iconUrl: '../../src/assets/imgs/Hammer.svg',
+        iconSize: [55, 55], // size of the icon,  
+      });
+      let latitude = parseFloat(this.roverData.latitude);
+      let longitude = parseFloat(this.roverData.longitude);
+      let newMarker = new L.marker([latitude, longitude], { icon: greenIcon }).addTo(this.map);
+      this.allMarkers.push({
+        latitude: latitude,
+        longitude: longitude,
+        markerObject: newMarker
+      });
+      this.rover = newMarker;
+    },
+    fetchData() {
+      var res = null;
+      axios
+        .get('http://localhost:5000/gps/rover')
+        .then(response => {
+          res = response.data;
+          this.roverData.latitude = res.coordinates[0];
+          this.roverData.longitude = res.coordinates[1];
+          console.log(this.roverData.latitude, this.roverData.longitude);
+          this.rover.setLatLng([this.roverData.latitude, this.roverData.longitude])
+
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
   },
 }
 </script>
@@ -73,12 +134,12 @@ export default {
 }
 
 #map {
-    position: absolute;
-    z-index: 1;
-    top: 0;
-    bottom: 0;
-    width: 100vw;
-    filter: sepia(100%) hue-rotate(90deg) saturate(100%) brightness(70%) contrast(200%);
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  bottom: 0;
+  width: 100vw;
+  filter: sepia(100%) hue-rotate(90deg) saturate(100%) brightness(70%) contrast(200%);
 }
 
 .interface {
