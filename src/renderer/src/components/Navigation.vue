@@ -5,7 +5,7 @@ export default {
   },
   computed: {
     windows() {
-      return ['home', 'arm', 'science', 'cameras', 'graphs','GPS' ,'test']
+      return ['home', 'arm', 'science', 'cameras', 'graphs','GPS' ,'test', "armPreview"]
       // The names of the pages are written
     }
   },

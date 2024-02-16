@@ -30,7 +30,22 @@
     "mapbox-gl": "^3.1.2",
     "nodemon": "^3.0.1",
     "vue3-apexcharts": "^1.4.4",
-    "vuex": "^4.1.0"
+    "vuex": "^4.1.0",
+    "@babel/core": "^7.21.8",
+    "@babel/preset-env": "^7.21.5",
+    "@webcomponents/webcomponentsjs": "^2.4.4",
+    "babel-jest": "^29.5.0",
+    "concurrently": "^6.2.1",
+    "jest": "^27.1.1",
+    "jest-cli": "^27.1.1",
+    "jsdom": "^17.0.0",
+    "node-fetch": "^3.0.0",
+    "nyc": "^15.1.0",
+    "parcel": "^2.0.0",
+    "static-server": "^3.0.0",
+    "three": "^0.152.2",
+    "typescript": "^3.9.7",
+    "rollup": "^2.29.0"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config": "^1.0.1",
@@ -46,6 +61,21 @@
     "parallelshell": "^3.0.2",
     "prettier": "^3.0.2",
     "vite": "^4.4.9",
-    "vue": "^3.3.4"
+    "vue": "^3.3.4",
+    "@babel/core": "^7.21.8",
+    "@babel/preset-env": "^7.21.5",
+    "@webcomponents/webcomponentsjs": "^2.4.4",
+    "babel-jest": "^29.5.0",
+    "concurrently": "^6.2.1",
+    "jest": "^27.1.1",
+    "jest-cli": "^27.1.1",
+    "jsdom": "^17.0.0",
+    "node-fetch": "^3.0.0",
+    "nyc": "^15.1.0",
+    "parcel": "^2.0.0",
+    "static-server": "^3.0.0",
+    "three": "^0.152.2",
+    "typescript": "^3.9.7",
+    "rollup": "^2.29.0"
   }
 }
