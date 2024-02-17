@@ -10,10 +10,9 @@ export default {
   emits: ['archive-selected'],
   methods: {
     selectArchive(archive) {
-      // Emit an event with the selected archive
       this.$emit('archive-selected', archive)
     }
-  } // Declare the 'archive-selected' event
+  } 
 }
 </script>
 
@@ -46,6 +45,6 @@ export default {
 .scrolling-menu ul li {
   display: block;
   margin-bottom: 10px;
-  cursor: pointer; /* Add cursor pointer to indicate clickable */
+  cursor: pointer; 
 }
 </style>
