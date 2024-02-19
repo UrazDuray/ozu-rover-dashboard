@@ -2,7 +2,7 @@
 import Navigation from './components/Navigation.vue';
 import HomeWindow from './components/HomeWindow.vue';
 import ArmWindow from './components/ArmWindow.vue';
-import CamerasWindow from './components/CamerasWindow.vue';
+import CameraWindow from './components/CameraWindow.vue';
 import ScienceWindow from './components/ScienceWindow.vue';
 import GraphsWindow from './components/GraphsWindow.vue';
 import GPSWindow from './components/GPSWindow.vue';
@@ -106,7 +106,7 @@ export default {
   <div class="WindowsDivClass">
     <HomeWindow v-if="activeWindow == 'home' && roverData" :roverData="roverData"/>
     <ArmWindow v-else-if="activeWindow == 'arm'"/>
-    <CamerasWindow v-else-if="activeWindow == 'cameras'"/>
+    <CameraWindow v-else-if="activeWindow == 'camera'"/>
     <ScienceWindow :roverData="roverData" v-else-if="activeWindow == 'science'"/>
     <GraphsWindow :size-updater="sizeUpdater" :roverData="roverData" v-else-if="activeWindow == 'graphs'"/>
     <GPSWindow v-else-if="activeWindow=='GPS'"/>

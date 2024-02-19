@@ -5,13 +5,13 @@ export default {
   },
   computed: {
     windows() {
-      return ['home', 'arm', 'science', 'cameras', 'graphs','GPS' ,'test']
+      return ['home', 'arm', 'science', 'camera', 'graphs','GPS' ,'test']
       // The names of the pages are written
     }
   },
   data() {
     return {
-      selectedWindow: 'GPS',
+      selectedWindow: 'camera',
       // It is stated which page will be opened first.
       selectIndicatorData: {left: 0, top: 0, height: 0, width: 0},
     }
