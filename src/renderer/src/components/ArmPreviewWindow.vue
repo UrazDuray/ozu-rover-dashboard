@@ -102,7 +102,7 @@
         const urdf = e.target.getAttribute('urdf');
         const color = e.target.getAttribute('color');
 
-        viewer.value.up = '-Z';
+        viewer.value.up = '+Z';
         document.getElementById('up-select').value = viewer.value.up;
         viewer.value.urdf = urdf;
         animToggle.value.classList.add('checked');
@@ -344,10 +344,10 @@
 
 <template>
   <div id="menu">
+    <div style="height: 32px"/>
     <ul id="urdf-options">
-      <li urdf="/urdf/T12/urdf/T12_flipped.URDF" color="#E91E63">ATHLETE</li>
+      <li urdf="/urdf/Ares/urdf/new_arm.urdf" color="#E91E63">Ares</li>
       <li urdf="/urdf/TriATHLETE/urdf/TriATHLETE_flipped.URDF" color="#009688">TriATHLETE</li>
-      <li urdf="/urdf/TriATHLETE_Climbing/urdf/TriATHLETE_flipped.URDF" color="#FFB300">TriATHLETE Climbing</li>
     </ul>
 
     <div id="controls" ref="controlsel" class="hidden">
@@ -357,7 +357,7 @@
       <div ref="radiansToggle" @click="handleRadiansToggle" id="radians-toggle" class="toggle">Use Radians</div>
       <div @click="handleAutocenterToggle" id="autocenter-toggle" class="toggle checked">Autocenter</div>
       <div @click="handleCollisionToggle" id="collision-toggle" class="toggle">Show Collision</div>
-      <div id="do-animate" ref="animToggle" class="toggle checked">Animate Joints</div>
+      <div id="do-animate" ref="animToggle" class="toggle">Animate Joints</div>
       <label>
         Up Axis
         <select @change="upSelectHandler" id="up-select">
@@ -365,14 +365,14 @@
           <option value="-X">-X</option>
           <option value="+Y">+Y</option>
           <option value="-Y">-Y</option>
-          <option value="+Z">+Z</option>
-          <option value="-Z" selected>-Z</option>
+          <option value="+Z" selected>+Z</option>
+          <option value="-Z">-Z</option>
         </select>
       </label>
       <ul ref="sliderList"></ul>
     </div>
   </div>
-  <urdf-viewer ref="viewer" up="-Z" display-shadow tabindex="0"></urdf-viewer>
+  <urdf-viewer ref="viewer" up="+Z" display-shadow tabindex="0"></urdf-viewer>
 </template>
 
 <style scoped>
