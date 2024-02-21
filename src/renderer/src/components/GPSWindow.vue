@@ -99,8 +99,8 @@ export default {
     },
     roverMove() {
       var greenIcon = L.icon({
-        iconUrl: '../../src/assets/imgs/Hammer.svg',
-        iconSize: [55, 55], // size of the icon,  
+        iconUrl: '../../src/assets/icons/Ozu-Rover-Logo.svg',
+        iconSize: [80, 80], // size of the icon,  
       });
       let latitude = parseFloat(this.roverData.latitude);
       let longitude = parseFloat(this.roverData.longitude);
@@ -176,7 +176,6 @@ export default {
   background-color: rgba(50, 117, 53, 0.349);
   background-color: rgba(50,117,53,0.75);
   opacity: 0;
-  opacity: 1;
   transition: 1.5s linear;
 }
 .right:hover {
