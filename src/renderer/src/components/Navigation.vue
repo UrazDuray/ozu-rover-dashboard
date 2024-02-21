@@ -11,7 +11,7 @@ export default {
   },
   data() {
     return {
-      selectedWindow: 'camera',
+      selectedWindow: 'GPS',
       // It is stated which page will be opened first.
       selectIndicatorData: {left: 0, top: 0, height: 0, width: 0},
     }

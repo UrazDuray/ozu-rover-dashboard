@@ -56,6 +56,11 @@ export default {
       }
       this.tempMarker = new L.marker([lat, lon]).addTo(this.map);
       this.tempMarker.bindPopup("<b style='color:black'>" + "Lat: " + lat + "<br>" + "Lon: " + lon + "</b>").openPopup();
+      let latInput = document.getElementById("inputLatitude");
+      let lonInput = document.getElementById("inputLongitude");
+      latInput.value = lat
+      lonInput.value = lon
+      
     });
 
     var layer = L.tileLayer("http://localhost:3000/?z={z}&x={x}&y={y}.png", {}).addTo(this.map);
@@ -165,9 +170,18 @@ export default {
 
 .right {
   margin: 20px;
+  padding-left:1rem;
   height: 60%;
   border-radius: 10px;
   background-color: rgba(50, 117, 53, 0.349);
+  background-color: rgba(50,117,53,0.75);
+  opacity: 0;
+  opacity: 1;
+  transition: 1.5s linear;
+}
+.right:hover {
+  opacity: 1;
+  transition: 1.5s linear; 
 }
 
 .gridContainer {
