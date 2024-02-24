@@ -8,11 +8,11 @@ import GraphsWindow from './components/GraphsWindow.vue';
 import GPSWindow from './components/GPSWindow.vue';
 import TestWindow from './components/TestWindow.vue';
 import ArmPreviewWindow from "./components/ArmPreviewWindow.vue"
+import URDFManipulator from "./urdfScripts/urdf-manipulator-element"
+customElements.define('urdf-viewer', URDFManipulator);
 </script>
 
 <script>
-
-
 export default {
   computed: {
     maxHistoryLength(){ return 100 },

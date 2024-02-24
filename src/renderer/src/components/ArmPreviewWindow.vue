@@ -1,13 +1,12 @@
 <script setup>
-  import {onMounted, ref} from "vue"
+import {onMounted, onUnmounted, ref} from "vue"
   import * as THREE from "three"
   import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
   import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
   import { ColladaLoader } from 'three/examples/jsm/loaders/ColladaLoader.js';
   import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js'
   import {registerDragEvents} from "../urdfScripts/ArmPreviewDragAndDrop"
-  import URDFManipulator from "../urdfScripts/urdf-manipulator-element"
-  customElements.define('urdf-viewer', URDFManipulator);
+  import {armData} from "../armData"
 
   const viewer = ref(null)
   const sliders = ref({})
@@ -16,6 +15,8 @@
   const radiansToggle = ref(null)
   const animToggle = ref(null)
   const controlsel = ref(null)
+
+  const sliderInterval = ref(null)
 
   const DEG2RAD = Math.PI / 180
   const RAD2DEG = 1 / DEG2RAD
@@ -55,8 +56,29 @@
     controlsel.value.classList.toggle('hidden')
   }
 
-  const updateAngles = () => {
+  const getSortedJointValues = () => {
+    const r = viewer.value.robot
+    return (Object
+      .keys(r.joints)
+      .sort((a, b) => {
 
+        const da = a.split(/[^\d]+/g).filter(v => !!v).pop();
+        const db = b.split(/[^\d]+/g).filter(v => !!v).pop();
+
+        if (da !== undefined && db !== undefined) {
+          const delta = parseFloat(da) - parseFloat(db);
+          if (delta !== 0) return delta;
+        }
+
+        if (a > b) return 1;
+        if (b > a) return -1;
+        return 0;
+
+      })
+      .map(key => r.joints[key]))
+  }
+
+  const updateAngles = () => {
     if (!viewer.value.setJointValue) return;
 
     // reset everything to 0 first
@@ -120,7 +142,24 @@
     document.body.appendChild(script)
   }
 
-  onMounted(() => {
+  const syncSliders = async () => {
+    const data = await armData.getData()
+    getSortedJointValues().slice(1, 5).forEach((joint, i) => {
+      const li = document.querySelector(`#slider-${joint.name}`)
+
+      const value = data.states[i]
+
+      viewer.value.setJointValue(joint.name, value)
+
+      li.update()
+
+      sliders.value[joint.name] = li
+    })
+  }
+
+  onUnmounted( () => clearInterval(sliderInterval.value))
+
+  onMounted( () => {
     initializeWebComponentsScript()
 
     viewer.value.addEventListener("urdf-change", () => {
@@ -131,24 +170,20 @@
     })
 
     viewer.value.addEventListener("angle-change", e => {
-      console.log("test")
       if (sliders.value[e.detail]) sliders.value[e.detail].update()
     })
 
     viewer.value.addEventListener("joint-mouseover", e => {
-      console.log("test")
       const j = document.querySelector(`controls li[joint-name="${ e.detail }"]`);
       if (j) j.setAttribute('robot-hovered', true);
     })
 
     viewer.value.addEventListener('joint-mouseout', e => {
-      console.log("test")
       const j = document.querySelector(`controls li[joint-name="${ e.detail }"]`);
       if (j) j.removeAttribute('robot-hovered');
     })
 
     viewer.value.addEventListener('manipulate-start', e => {
-      console.log("test")
       const j = document.querySelector(`controls li[joint-name="${ e.detail }"]`);
       if (j) {
         j.scrollIntoView({ block: 'nearest' });
@@ -161,33 +196,14 @@
     });
 
     viewer.value.addEventListener('manipulate-end', () => {
-      console.log("test")
       viewer.value.noAutoRecenter = originalNoAutoRecenter.value;
     })
 
     viewer.value.addEventListener('urdf-processed', () => {
-      console.log("test")
-      const r = viewer.value.robot;
-      Object
-        .keys(r.joints)
-        .sort((a, b) => {
-
-          const da = a.split(/[^\d]+/g).filter(v => !!v).pop();
-          const db = b.split(/[^\d]+/g).filter(v => !!v).pop();
-
-          if (da !== undefined && db !== undefined) {
-            const delta = parseFloat(da) - parseFloat(db);
-            if (delta !== 0) return delta;
-          }
-
-          if (a > b) return 1;
-          if (b > a) return -1;
-          return 0;
-
-        })
-        .map(key => r.joints[key])
+      getSortedJointValues()
         .forEach(joint => {
           const li = document.createElement('li');
+          li.id = "slider-" + joint.name
           li.innerHTML =
             `
             <span title="${ joint.name }">${ joint.name }</span>
@@ -249,13 +265,11 @@
           }
 
           slider.addEventListener('input', () => {
-            console.log("test")
             viewer.value.setJointValue(joint.name, slider.value);
             li.update();
           });
 
           input.addEventListener('change', () => {
-            console.log("test")
             const degMultiplier = radiansToggle.value.classList.contains('checked') ? 1.0 : RAD2DEG;
             viewer.value.setJointValue(joint.name, input.value * degMultiplier);
             li.update();
@@ -265,12 +279,13 @@
 
           sliders.value[joint.name] = li
         })
+
+      syncSliders()
+      sliderInterval.value = setInterval(syncSliders, 50)
     });
 
     document.addEventListener('WebComponentsReady', () => {
-      console.log("test")
       viewer.value.loadMeshFunc = (path, manager, done) => {
-        console.log("test")
         const ext = path.split(/\./g).pop().toLowerCase();
         switch (ext) {
           case 'gltf':
@@ -322,7 +337,6 @@
       }
 
       registerDragEvents(viewer.value, () => {
-        console.log("test")
         setColor('#263238');
         animToggle.value.classList.remove('checked');
         updateList();
