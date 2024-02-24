@@ -33,6 +33,7 @@ export default {
   data() {
     return {
       map: null,
+      interval: null,
       allMarkers: [],
       rover: null,
       roverData: {
@@ -41,6 +42,9 @@ export default {
       },
       tempMarker: null,
     }
+  },
+  unmounted() {
+    clearInterval(this.interval)
   },
   mounted() {
     this.map = L.map("map", {
@@ -62,7 +66,7 @@ export default {
     this.roverMove();
     this.fetchData();
 
-    setInterval(() => {
+    this.interval = setInterval(() => {
       this.fetchData();
     }, 100);
   },
@@ -70,10 +74,10 @@ export default {
     addMarkerAtMap(latitude, longitude, _mType, _mID, id) {
       let lat = parseFloat(latitude);
       let lon = parseFloat(longitude);
-      let url = "../../src/assets/imgs/"+_mType+".svg";      
+      let url = "../../src/assets/imgs/"+_mType+".svg";
       var icon = L.icon({
           iconUrl: url,
-          iconSize: [55, 55], // size of the icon,  
+          iconSize: [55, 55], // size of the icon,
         })
       var newMarker = new L.marker([lat, lon], { icon: icon }).addTo(this.map);
       this.allMarkers.push({
@@ -95,7 +99,7 @@ export default {
     roverMove() {
       var greenIcon = L.icon({
         iconUrl: '../../src/assets/imgs/Hammer.svg',
-        iconSize: [55, 55], // size of the icon,  
+        iconSize: [55, 55], // size of the icon,
       });
       let latitude = parseFloat(this.roverData.latitude);
       let longitude = parseFloat(this.roverData.longitude);
