@@ -2,7 +2,7 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { dirname, join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import'roslib'
+//import cassandra from 'cassandra-driver'
 
 //#region express http getter
 import express from 'express'
@@ -15,31 +15,85 @@ expressApp.use(express.json())
 expressApp.use(cors())
 //#endregion
 
-// ENDPOINTS
-
-// Autonomy
-expressApp.get('/data/gps/rover', (req, res) => {
-  let gps = {
-    latitude: 2,
-    longitude: 2
+var telemetryData = {
+  autonomy: {
+    gps: {
+      base: [0.0, 0.0],
+      rover: [0.0, 0.0]
+    },
+    goal: null,
+    markerType: null
+  },
+  science: {
+    archive_ids: []
+  },
+  manipulator: {
+    angelPoses: [0, 0, 0, 0, 0],
   }
-  res.send(gps)
+}
+
+//const authProvider = new cassandra.auth.PlainTextAuthProvider(
+//  'username',
+//  'password'
+//)
+//const client = cassandra.Client({
+//  contactPoints: ['localhost'],
+//  localDataCenter: 'datacenter1',
+//  authProvider: authProvider,
+//  keyspace: 'ares'
+//})
+
+expressApp.get('/data/gps/rover', (req, res) => {
+  res.send(telemetryData.autonomy.gps)
 })
+
 expressApp.post('/goal/enqueue', (req, res) => {
-  let gps = req.body
-  res.send(gps)
+  goal = req.body
 })
 
-expressApp.get('goal/abort', (req, res) => {
-  res.send('Hello abort')
+expressApp.post('goal/abort', (req, res) => {
+  abort = req.body
 })
 
-// Science
+expressApp.get('/science/sample', (req, res) => {
+  /* Send ROS service request */
+  res.send(JSON.stringify({
+    "spectrograph": []
+  }))
+})
 
+expressApp.get('/science/capture/panorama', (req, res) => {
+  /* Send ROS service request */
+  res.send(JSON.stringify({
 
+  }))
+})
 
+expressApp.get('/science/capture/highres', (req, res) => {
+  /* Send ROS service request */
+  res.send(JSON.stringify({
+
+  }))
+})
+
+expressApp.post('/science/archive/select', (req, res) => {
+  /* Request  */
+
+})
+
+expressApp.post('/science/archive/create', (req, res) => {
+  /* Request  */
+})
 
 // Manipulator
+
+expressApp.get('/arm/data/ak60', (req, res) => {
+  res.send(JSON.stringify({
+    manipulator: {
+      angelPoses: [0, 0, 0, 0, 0]
+    }
+  }))
+})
 
 function createWindow() {
   // Create the browser window.
