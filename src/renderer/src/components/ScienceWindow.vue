@@ -56,12 +56,16 @@ export default {
     </div>
 
     <div class="space-between"></div>
-    
+
     <div v-if="selectedArchiveName">Selected Archive: {{ selectedArchiveName }}</div>
   </div>
 </template>
 
 <style scoped>
+body {
+  background-color: black;
+}
+
 .space-between {
   margin-bottom: 20px;
 }

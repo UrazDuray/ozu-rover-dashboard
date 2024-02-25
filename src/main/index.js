@@ -2,18 +2,44 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { dirname, join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import'roslib'
 
-//#region express http getter 
+//#region express http getter
 import express from 'express'
 import cors from 'cors'
 
-const expressApp = express();
-const expressPort = 4000;
+const expressApp = express()
+const expressPort = 4000
 
-expressApp.use(express.json());
+expressApp.use(express.json())
 expressApp.use(cors())
 //#endregion
 
+// ENDPOINTS
+
+// Autonomy
+expressApp.get('/data/gps/rover', (req, res) => {
+  let gps = {
+    latitude: 2,
+    longitude: 2
+  }
+  res.send(gps)
+})
+expressApp.post('/goal/enqueue', (req, res) => {
+  let gps = req.body
+  res.send(gps)
+})
+
+expressApp.get('goal/abort', (req, res) => {
+  res.send('Hello abort')
+})
+
+// Science
+
+
+
+
+// Manipulator
 
 function createWindow() {
   // Create the browser window.
@@ -29,7 +55,7 @@ function createWindow() {
       enableRemoteModule: true,
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false
-    },
+    }
   })
 
   mainWindow.on('ready-to-show', () => {
@@ -43,23 +69,22 @@ function createWindow() {
 
   //#region express http getter
   expressApp.post('/rover-data', (req, res) => {
-    const requestData = req.body;
+    const requestData = req.body
 
-    mainWindow.webContents.send('electron-vue-rover-data', JSON.stringify(requestData));
+    mainWindow.webContents.send('electron-vue-rover-data', JSON.stringify(requestData))
 
-    res.send('Data forwarded to renderer process');
-  });
+    res.send('Data forwarded to renderer process')
+  })
 
   expressApp.listen(expressPort, () => {
-    console.log('Electron main listening on port 4000');
-  });
+    console.log('Electron main listening on port 4000')
+  })
 
   expressApp.get('/data', (req, res) => {
-    res.send(currentData);
-  });
+    res.send(currentData)
+  })
 
   //#endregion
-
 
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.

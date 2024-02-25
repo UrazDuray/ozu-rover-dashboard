@@ -14,7 +14,7 @@ import {onMounted, onUnmounted, ref} from "vue"
   const sliderList = ref(null)
   const radiansToggle = ref(null)
   const animToggle = ref(null)
-  const controlsel = ref(null)
+  //const controlsel = ref(null)
 
   const sliderInterval = ref(null)
 
@@ -50,10 +50,6 @@ import {onMounted, onUnmounted, ref} from "vue"
 
   const upSelectHandler = (e) => {
     viewer.value.up = e.target.value
-  }
-
-  const handleControlsToggle = () => {
-    controlsel.value.classList.toggle('hidden')
   }
 
   const getSortedJointValues = () => {
@@ -146,13 +142,9 @@ import {onMounted, onUnmounted, ref} from "vue"
     const data = await armData.getData()
     getSortedJointValues().slice(1, 5).forEach((joint, i) => {
       const li = document.querySelector(`#slider-${joint.name}`)
-
       const value = data.states[i]
-
       viewer.value.setJointValue(joint.name, value)
-
       li.update()
-
       sliders.value[joint.name] = li
     })
   }
@@ -360,11 +352,10 @@ import {onMounted, onUnmounted, ref} from "vue"
   <div id="menu">
     <div style="height: 32px"/>
     <ul id="urdf-options">
-      <li urdf="/urdf/Ares/urdf/new_arm.urdf" color="#E91E63">Ares</li>
-      <li urdf="/urdf/TriATHLETE/urdf/TriATHLETE_flipped.URDF" color="#009688">TriATHLETE</li>
+      <li urdf="/urdf/Ares/urdf/new_arm.urdf" color="#E91E63">Ares Manipulator</li>
     </ul>
 
-    <div id="controls" ref="controlsel" class="hidden">
+    <div id="controls" class="hidden">
       <div @click="handleControlsToggle" id="toggle-controls"></div>
       <div>Drag and drop URDF files or folders! <br/> (Chrome Only)</div>
       <div @click="handleLimitsToggle" id="ignore-joint-limits" class="toggle">Ignore Joint Limits</div>
@@ -562,23 +553,6 @@ input:focus {
   transition: 0.1s opacity linear;
   border-top: 1px solid white;
 }
-
-#controls #toggle-controls:hover {
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-#controls #toggle-controls:before {
-  content: "hide controls";
-  font-size: 12px;
-  font-weight: normal;
-}
-
-/* hidden state */
-#controls.hidden #toggle-controls:before {
-  content: "show controls";
-}
-
 
 #controls.hidden > *:not(#toggle-controls) {
   display: none;

@@ -1,6 +1,5 @@
 <template id="body">
   <div class="interface">
-
     <div class="left"></div>
     <div class="center"></div>
     <div class="right">
@@ -20,7 +19,6 @@
 
 <script>
 import MarkerSidebar from './autonomy/MarkerSidebar.vue';
-import mapboxgl from 'mapbox-gl';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css'
 import axios from 'axios';

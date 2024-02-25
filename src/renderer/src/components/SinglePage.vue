@@ -5,25 +5,20 @@ export default {
   },
   computed: {
     windows() {
-      return ['home', 'arm', 'science', 'cameras', 'graphs','GPS' ,'test', "armPreview"]
+      return ['Lithology', 'Navigation', 'Manipulator']
       // The names of the pages are written
     }
   },
   data() {
     return {
-      selectedWindow: 'GPS',
-      // It is stated which page will be opened first.
+      selectedWindow: 'Navigation', // The default page at startup
       selectIndicatorData: {left: 0, top: 0, height: 0, width: 0},
     }
   },
   methods: {
     ChangeWindow(windowName){
       this.$emit('WindowChange', windowName)
-      //It calls the 'windows change' method and gives the currently selected page as a parameter
-
       this.selectedWindow = windowName
-      // Makes the selected page equal to the value received as a parameter
-
       const el = this.$refs[`ref_${windowName}`][0]
       const elData = {left: el.offsetLeft, top: el.offsetTop, height: el.offsetHeight, width: el.offsetWidth - 2}
       this.selectIndicatorData = elData
@@ -35,7 +30,6 @@ export default {
   },
   mounted() {
     this.ChangeWindow(this.selectedWindow)
-    // It takes the selected page as a parameter and replaces the current page.
   },
   watch:{
     sizeUpdater(){
@@ -53,13 +47,13 @@ export default {
         top: selectIndicatorData.top + 'px',
         height: selectIndicatorData.height + 'px',
         width: selectIndicatorData.width + 'px',
-        borderBottom: `2px var(--primary) solid`,
+        borderBottom: `2px var(--theme-color) solid`,
       }" class="SelectIndicator">
     </div>
 
     <div v-for="(window, index) in windows" class="navigationButtonClass" :ref="`ref_${window}`" @click="ChangeWindow(window)" :key="index">
       <!-- Displaying pages with a for loop -->
-      <span class="navigationSpan" :style="{color: selectedWindow == window ? 'var(--primary)' : 'var(--font-color-light)'}">{{ FirstLetterUpperCase(window) }}</span>
+      <span class="navigationSpan" :style="{color: selectedWindow == window ? 'var(--theme-color)' : 'var(--font-color)'}">{{window}}</span>
       <!-- It adjusts the color according to the selected page. -->
     </div>
   </div>
@@ -67,9 +61,9 @@ export default {
 
 <style scoped>
 .NavigationDiv{
-  background-color: var(--theme-color-2);
+  background-color: var(--nav-bar-background);
   z-index: 100;
-  height: var(--navigation-height);
+  height: var(--nav-bar-height);
   padding: 0;
   display: flex;
   justify-content: space-evenly;
@@ -89,10 +83,14 @@ export default {
   margin: 0;
   padding: 0;
 }
+
+/* animation for the change in font color of the selected button */
 .navigationSpan{
   transition-duration: 200ms;
   user-select: none;
 }
+
+/* */
 .SelectIndicator{
   box-sizing: border-box;
   position: absolute;

@@ -98,7 +98,7 @@ class URDFViewer extends HTMLElement {
 
         const ambientLight = new THREE.HemisphereLight(this.ambientColor, '#000');
         ambientLight.groundColor.lerp(ambientLight.color, 0.5);
-        ambientLight.intensity = 0.5;
+        ambientLight.intensity = 0.6
         ambientLight.position.set(0, 1, 0);
         scene.add(ambientLight);
 
