@@ -8,6 +8,31 @@ import icon from '../../resources/icon.png?asset'
 import express from 'express'
 import cors from 'cors'
 
+import rosNodeJS from 'rosnodejs'
+
+function listener() {
+  try {
+    rosNodeJS.initNode('/listener_node').then((rosNode) => {
+      console.log('ROS node initialized')
+      let sub = rosNode.subscribe('/ares/rover/gps', 'sensor_msgs/NavSatFix', (data) => {
+        
+        telemetryData.autonomy.gps.rover = [data.latitude, data.longitude]
+        console.log(data)
+        
+      })
+      console.log('Subscribed to /ares/rover/gps')
+      
+      
+    })
+  } catch (error) {
+    console.error('Error initializing ROS node: ', error)
+  }
+}
+
+if (require.main === module) {
+  listener()
+}
+
 const expressApp = express()
 const expressPort = 4000
 
@@ -28,7 +53,7 @@ var telemetryData = {
     archive_ids: []
   },
   manipulator: {
-    angelPoses: [0, 0, 0, 0, 0],
+    angelPoses: [0, 0, 0, 0, 0]
   }
 }
 
@@ -57,28 +82,25 @@ expressApp.post('goal/abort', (req, res) => {
 
 expressApp.get('/science/sample', (req, res) => {
   /* Send ROS service request */
-  res.send(JSON.stringify({
-    "spectrograph": []
-  }))
+  res.send(
+    JSON.stringify({
+      spectrograph: []
+    })
+  )
 })
 
 expressApp.get('/science/capture/panorama', (req, res) => {
   /* Send ROS service request */
-  res.send(JSON.stringify({
-
-  }))
+  res.send(JSON.stringify({}))
 })
 
 expressApp.get('/science/capture/highres', (req, res) => {
   /* Send ROS service request */
-  res.send(JSON.stringify({
-
-  }))
+  res.send(JSON.stringify({}))
 })
 
 expressApp.post('/science/archive/select', (req, res) => {
   /* Request  */
-
 })
 
 expressApp.post('/science/archive/create', (req, res) => {
@@ -88,11 +110,13 @@ expressApp.post('/science/archive/create', (req, res) => {
 // Manipulator
 
 expressApp.get('/arm/data/ak60', (req, res) => {
-  res.send(JSON.stringify({
-    manipulator: {
-      angelPoses: [0, 0, 0, 0, 0]
-    }
-  }))
+  res.send(
+    JSON.stringify({
+      manipulator: {
+        angelPoses: [0, 0, 0, 0, 0]
+      }
+    })
+  )
 })
 
 function createWindow() {
