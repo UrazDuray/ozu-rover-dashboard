@@ -7,7 +7,8 @@ export default defineConfig({
     plugins: [externalizeDepsPlugin()]
   },
   preload: {
-    plugins: [externalizeDepsPlugin()]
+    plugins: [externalizeDepsPlugin()],
+   
   },
   renderer: {
     resolve: {
@@ -16,5 +17,8 @@ export default defineConfig({
       }
     },
     plugins: [vue()]
+  },
+  "web-preferences": {
+    "web-security": false
   }
 })

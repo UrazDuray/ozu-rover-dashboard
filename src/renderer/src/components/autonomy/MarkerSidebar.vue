@@ -109,8 +109,13 @@ export default {
         <li v-for="task in markers">
           <div id="markerTypeImg"><img :src="task.markerURL" alt="Icon"></div>
           <div id="coordinateLatitudeLongitude">
-            Latitude : {{ task.latitude }}
-            Longitude : {{ task.longitude }}
+            <div>
+              Latitude : {{ task.latitude }}
+            </div>
+            <div>
+              Longitude : {{ task.longitude }}
+            </div>
+            
             <div v-if="task.idDisplay" id="markerIDOutput">
               ID : {{ task.markerID }}
             </div>

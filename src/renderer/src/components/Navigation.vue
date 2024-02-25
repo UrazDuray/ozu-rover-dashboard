@@ -5,13 +5,13 @@ export default {
   },
   computed: {
     windows() {
-      return ['home', 'arm', 'science', 'camera', 'graphs','GPS' ,'test']
+      return ['home', 'arm', 'science', 'camera', 'graphs','gps' ,'test']
       // The names of the pages are written
     }
   },
   data() {
     return {
-      selectedWindow: 'GPS',
+      selectedWindow: 'camera',
       // It is stated which page will be opened first.
       selectIndicatorData: {left: 0, top: 0, height: 0, width: 0},
     }
@@ -30,7 +30,8 @@ export default {
     },
     FirstLetterUpperCase(string){
       // Converts the first letter of the word to uppercase.
-      return string[0].toUpperCase() + string.slice(1)
+      //return string[0].toUpperCase() + string.slice(1)
+      return string.toUpperCase()
     }
   },
   mounted() {

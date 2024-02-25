@@ -27,13 +27,19 @@
     "dgram": "^1.0.1",
     "electron-updater": "^6.1.1",
     "express": "^4.18.2",
+    "h264-mp4-encoder": "^1.0.12",
+    "http": "^0.0.1-security",
     "leaflet": "^1.9.4",
     "mapbox-gl": "^3.1.2",
     "nodemon": "^3.0.1",
     "socket.io": "^4.7.4",
     "socket.io-client": "^4.7.4",
     "vue3-apexcharts": "^1.4.4",
-    "vuex": "^4.1.0"
+    "vuex": "^4.1.0",
+    "webrtc": "^1.14.1",
+    "websocket": "^1.0.34",
+    "wes": "^1.1.0-beta.2",
+    "ws": "^8.16.0"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config": "^1.0.1",
