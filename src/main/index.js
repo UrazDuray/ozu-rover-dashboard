@@ -2,18 +2,122 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { dirname, join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+//import cassandra from 'cassandra-driver'
 
-//#region express http getter 
+//#region express http getter
 import express from 'express'
 import cors from 'cors'
 
-const expressApp = express();
-const expressPort = 4000;
+import rosNodeJS from 'rosnodejs'
 
-expressApp.use(express.json());
+function listener() {
+  try {
+    rosNodeJS.initNode('/listener_node').then((rosNode) => {
+      console.log('ROS node initialized')
+      let sub = rosNode.subscribe('/ares/rover/gps', 'sensor_msgs/NavSatFix', (data) => {
+        
+        telemetryData.autonomy.gps.rover = [data.latitude, data.longitude]
+        console.log(data)
+        
+      })
+      console.log('Subscribed to /ares/rover/gps')
+      
+      
+    })
+  } catch (error) {
+    console.error('Error initializing ROS node: ', error)
+  }
+}
+
+if (require.main === module) {
+  listener()
+}
+
+const expressApp = express()
+const expressPort = 4000
+
+expressApp.use(express.json())
 expressApp.use(cors())
 //#endregion
 
+var telemetryData = {
+  autonomy: {
+    gps: {
+      base: [0.0, 0.0],
+      rover: [0.0, 0.0]
+    },
+    goal: null,
+    markerType: null
+  },
+  science: {
+    archive_ids: []
+  },
+  manipulator: {
+    angelPoses: [0, 0, 0, 0, 0]
+  }
+}
+
+//const authProvider = new cassandra.auth.PlainTextAuthProvider(
+//  'username',
+//  'password'
+//)
+//const client = cassandra.Client({
+//  contactPoints: ['localhost'],
+//  localDataCenter: 'datacenter1',
+//  authProvider: authProvider,
+//  keyspace: 'ares'
+//})
+
+expressApp.get('/data/gps/rover', (req, res) => {
+  res.send(telemetryData.autonomy.gps)
+})
+
+expressApp.post('/goal/enqueue', (req, res) => {
+  goal = req.body
+})
+
+expressApp.post('goal/abort', (req, res) => {
+  abort = req.body
+})
+
+expressApp.get('/science/sample', (req, res) => {
+  /* Send ROS service request */
+  res.send(
+    JSON.stringify({
+      spectrograph: []
+    })
+  )
+})
+
+expressApp.get('/science/capture/panorama', (req, res) => {
+  /* Send ROS service request */
+  res.send(JSON.stringify({}))
+})
+
+expressApp.get('/science/capture/highres', (req, res) => {
+  /* Send ROS service request */
+  res.send(JSON.stringify({}))
+})
+
+expressApp.post('/science/archive/select', (req, res) => {
+  /* Request  */
+})
+
+expressApp.post('/science/archive/create', (req, res) => {
+  /* Request  */
+})
+
+// Manipulator
+
+expressApp.get('/arm/data/ak60', (req, res) => {
+  res.send(
+    JSON.stringify({
+      manipulator: {
+        angelPoses: [0, 0, 0, 0, 0]
+      }
+    })
+  )
+})
 
 function createWindow() {
   // Create the browser window.
@@ -30,7 +134,7 @@ function createWindow() {
       enableRemoteModule: true,
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false
-    },
+    }
   })
 
   mainWindow.on('ready-to-show', () => {
@@ -44,23 +148,22 @@ function createWindow() {
 
   //#region express http getter
   expressApp.post('/rover-data', (req, res) => {
-    const requestData = req.body;
+    const requestData = req.body
 
-    mainWindow.webContents.send('electron-vue-rover-data', JSON.stringify(requestData));
+    mainWindow.webContents.send('electron-vue-rover-data', JSON.stringify(requestData))
 
-    res.send('Data forwarded to renderer process');
-  });
+    res.send('Data forwarded to renderer process')
+  })
 
   expressApp.listen(expressPort, () => {
-    console.log('Electron main listening on port 4000');
-  });
+    console.log('Electron main listening on port 4000')
+  })
 
   expressApp.get('/data', (req, res) => {
-    res.send(currentData);
-  });
+    res.send(currentData)
+  })
 
   //#endregion
-
 
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.

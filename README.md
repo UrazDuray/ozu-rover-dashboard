@@ -118,6 +118,14 @@ $ npm run build:linux
 
 ## Notes
 
+### Not Seeing Arm in the Preview Page?
+
+Running in production mode may cause asset files to be excluded from build.
+```
+npm run start # running in production, preview fails
+npm run dev # use this instead
+```
+
 ### Autonomy Mapping
 First, install the tile-server Docker image from DockerHub and run it.
 
