@@ -4,25 +4,39 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 //import cassandra from 'cassandra-driver'
 
-//#region express http getter
 import express from 'express'
 import cors from 'cors'
-
 import rosNodeJS from 'rosnodejs'
 
+// Global Data
+var telemetryData = {
+  autonomy: {
+    gps: {
+      base: [0.0, 0.0],
+      rover: [0.0, 0.0]
+    },
+    goal: null,
+    markerType: null
+  },  
+  science: {
+    archive_ids: []
+  },
+  manipulator: {
+    angelPoses: [0, 0, 0, 0, 0]
+  }
+}
+// ROS
 function listener() {
   try {
     rosNodeJS.initNode('/listener_node').then((rosNode) => {
       console.log('ROS node initialized')
-      let sub = rosNode.subscribe('/ares/rover/gps', 'sensor_msgs/NavSatFix', (data) => {
-        
+      var sub1 = rosNode.subscribe('/ares/gps/rover', 'sensor_msgs/NavSatFix', (data) => {
         telemetryData.autonomy.gps.rover = [data.latitude, data.longitude]
         console.log(data)
-        
-      })
-      console.log('Subscribed to /ares/rover/gps')
-      
-      
+      });
+      var sub2 = rosNode.subscribe('/ares/arm/state', 'sensor_msgs/JointState', (data) => {
+        telemetryData.manipulator.angelPoses = data.position
+      });
     })
   } catch (error) {
     console.error('Error initializing ROS node: ', error)
@@ -32,31 +46,12 @@ function listener() {
 if (require.main === module) {
   listener()
 }
-
+// Express
 const expressApp = express()
 const expressPort = 4000
-
 expressApp.use(express.json())
 expressApp.use(cors())
-//#endregion
-
-var telemetryData = {
-  autonomy: {
-    gps: {
-      base: [0.0, 0.0],
-      rover: [0.0, 0.0]
-    },
-    goal: null,
-    markerType: null
-  },
-  science: {
-    archive_ids: []
-  },
-  manipulator: {
-    angelPoses: [0, 0, 0, 0, 0]
-  }
-}
-
+// Cassandra
 //const authProvider = new cassandra.auth.PlainTextAuthProvider(
 //  'username',
 //  'password'
@@ -67,19 +62,16 @@ var telemetryData = {
 //  authProvider: authProvider,
 //  keyspace: 'ares'
 //})
-
+// Endpoints
 expressApp.get('/data/gps/rover', (req, res) => {
   res.send(telemetryData.autonomy.gps)
 })
-
 expressApp.post('/goal/enqueue', (req, res) => {
   goal = req.body
 })
-
 expressApp.post('goal/abort', (req, res) => {
   abort = req.body
 })
-
 expressApp.get('/science/sample', (req, res) => {
   /* Send ROS service request */
   res.send(
@@ -88,27 +80,20 @@ expressApp.get('/science/sample', (req, res) => {
     })
   )
 })
-
 expressApp.get('/science/capture/panorama', (req, res) => {
   /* Send ROS service request */
   res.send(JSON.stringify({}))
 })
-
 expressApp.get('/science/capture/highres', (req, res) => {
   /* Send ROS service request */
   res.send(JSON.stringify({}))
 })
-
 expressApp.post('/science/archive/select', (req, res) => {
   /* Request  */
 })
-
 expressApp.post('/science/archive/create', (req, res) => {
   /* Request  */
 })
-
-// Manipulator
-
 expressApp.get('/arm/data/ak60', (req, res) => {
   res.send(
     JSON.stringify({

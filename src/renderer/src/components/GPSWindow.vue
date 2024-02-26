@@ -65,7 +65,6 @@ export default {
     this.fetchData();
 
     this.interval = setInterval(() => {
-      this.fetchData();
     }, 100);
   },
   methods: {
