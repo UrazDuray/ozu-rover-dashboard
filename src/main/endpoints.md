@@ -1,4 +1,4 @@
-# Endpoints
+# Endpoints for HTTP
 
 ## Autonomy
 
